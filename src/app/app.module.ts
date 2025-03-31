@@ -12,6 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'user',
       password: 'teste',
       database: 'teste',
+      autoLoadEntities: true,
     }),
   ],
   controllers: [AppController],
