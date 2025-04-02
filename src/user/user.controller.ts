@@ -4,10 +4,13 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Get,
+  Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-@Controller('user')
+import { User } from './entities/user.entity';
+@Controller('api/v1/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -26,10 +29,15 @@ export class UserController {
   //   return this.userService.findAll();
   // }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.userService.findOne(+id);
-  // }
+  @Get(':id')
+  async findUserById(@Param('id') id: string) {
+    if (id == '') {
+      throw new HttpException('Invalid Id', HttpStatus.BAD_REQUEST);
+    }
+    const user: User = await this.userService.findUserById(id);
+
+    return user;
+  }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
