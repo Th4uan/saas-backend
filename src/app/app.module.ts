@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigType } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import appConfig from './app.config';
+import { UserModule } from 'src/user/user.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -23,9 +25,12 @@ import appConfig from './app.config';
           password: config.database.password,
           database: config.database.database,
           autoLoadEntities: config.database.autoLoadEntities,
+          synchronize: true, // desativar depois
         };
       },
     }),
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
