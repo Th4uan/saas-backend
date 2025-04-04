@@ -6,10 +6,12 @@ import {
   HttpStatus,
   Get,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
+import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 @Controller('api/v1/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -29,6 +31,7 @@ export class UserController {
   //   return this.userService.findAll();
   // }
 
+  @UseGuards(AuthTokenGuard)
   @Get(':id')
   async findUserById(@Param('id') id: string) {
     if (id == '') {
