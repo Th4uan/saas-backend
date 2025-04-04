@@ -12,16 +12,20 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
+import { IsPublic } from 'src/common/decorators/is-public.decorator';
+
+@UseGuards(AuthTokenGuard)
 @Controller('api/v1/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @IsPublic()
   @Post()
   async registerUser(@Body() createUserDto: CreateUserDto) {
     if (!createUserDto) {
       throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
     }
-    const user = await this.userService.create(createUserDto);
+    const user = await this.userService.createMember(createUserDto);
 
     return user;
   }
@@ -31,7 +35,6 @@ export class UserController {
   //   return this.userService.findAll();
   // }
 
-  @UseGuards(AuthTokenGuard)
   @Get(':id')
   async findUserById(@Param('id') id: string) {
     if (id == '') {

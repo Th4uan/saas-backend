@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { Response } from 'express';
 import cookieConfig from './configs/cookie.config';
 import { ConfigType } from '@nestjs/config';
+import { IsPublic } from 'src/common/decorators/is-public.decorator';
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -13,10 +14,11 @@ export class AuthController {
     private readonly cookie: ConfigType<typeof cookieConfig>,
   ) {}
 
+  @IsPublic()
   @Post()
   async signUp(@Body() loginDto: LoginDto, @Res() res: Response) {
-    const payload = await this.authService.signUp(loginDto);
-    res.cookie('jwt', payload, {
+    const { acessToken, user } = await this.authService.signUp(loginDto);
+    res.cookie('jwt', acessToken, {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
@@ -26,6 +28,7 @@ export class AuthController {
     return {
       message: 'Login successful',
       user: {
+        id: user.id,
         email: loginDto.email,
       },
     };

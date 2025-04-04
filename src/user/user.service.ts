@@ -13,13 +13,14 @@ export class UserService {
     private readonly hashingService: HashingService,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async createMember(createUserDto: CreateUserDto) {
     const hashPass = await this.hashingService.hash(createUserDto.password);
 
     const userData = {
       username: createUserDto.username,
       fullName: createUserDto.fullName,
       email: createUserDto.email,
+      role: 'member',
       password: hashPass,
     };
 

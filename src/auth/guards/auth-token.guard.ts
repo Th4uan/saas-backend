@@ -11,6 +11,7 @@ import jwtConfig from '../configs/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { REQUEST_TOKEN_JWT_PAYLOAD } from '../auth.constants';
 import { JwtPayload } from '../interfaces/jwt-interface.interface';
+import { RequestWithCookies } from '../interfaces/request-with-cookies.interface';
 
 @Injectable()
 export class AuthTokenGuard implements CanActivate {
@@ -22,7 +23,7 @@ export class AuthTokenGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
+    const token = this.extractTokenFromCookies(request);
     if (!token) {
       throw new UnauthorizedException('');
     }
@@ -40,13 +41,8 @@ export class AuthTokenGuard implements CanActivate {
     return true;
   }
 
-  extractTokenFromHeader(request: Request): string | undefined {
-    const authorization = request.headers?.authorization;
-
-    if (!authorization || typeof authorization !== 'string') {
-      return;
-    }
-
-    return authorization.split(' ')[1];
+  extractTokenFromCookies(request: RequestWithCookies): string | undefined {
+    const token = request.cookies?.['jwt'];
+    return token || undefined;
   }
 }
