@@ -6,5 +6,6 @@ export default registerAs('jwt', () => {
     aud: process.env.JWT_TOKEN_AUDIENCE,
     iss: process.env.JWT_TOKEN_ISSUER,
     jwtTtl: Number(process.env.JWT_TTL ?? '3600'),
+    jwtTtlRefresh: Number(process.env.JWT_TTL_REFRESH ?? '86400'),
   };
 });

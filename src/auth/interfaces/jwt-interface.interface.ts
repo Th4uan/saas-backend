@@ -1,9 +1,12 @@
-export interface JwtPayload {
+export interface Jwt {
   sub: string;
-  email: string;
-  role: string;
   aud?: string;
   iss?: string;
   secret: string | undefined;
   exp: number;
+}
+
+export interface JwtPayload extends Jwt {
+  email: string;
+  role: string;
 }

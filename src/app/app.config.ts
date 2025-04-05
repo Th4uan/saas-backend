@@ -10,4 +10,10 @@ export default registerAs('app', () => ({
     database: process.env.DATABASE_NAME,
     autoLoadEntities: true,
   },
+  cache: {
+    store: process.env.CACHE_STORE,
+    host: process.env.CACHE_HOST,
+    port: Number(process.env.CACHE_PORT),
+    ttl: Number(process.env.CACHE_TTL),
+  },
 }));

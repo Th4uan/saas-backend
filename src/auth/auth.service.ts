@@ -7,7 +7,10 @@ import { HashingService } from './hashing/hashing.service';
 import jwtConfig from './configs/jwt.config';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from './interfaces/jwt-interface.interface';
+import { Jwt, JwtPayload } from './interfaces/jwt-interface.interface';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +21,8 @@ export class AuthService {
     @Inject(jwtConfig.KEY)
     private readonly config: ConfigType<typeof jwtConfig>,
     private readonly jwtService: JwtService,
+    @Inject(CACHE_MANAGER)
+    private readonly cacheManager: Cache,
   ) {}
   async signUp(loginDto: LoginDto) {
     const user = await this.userRepository.findOneBy({
@@ -36,6 +41,65 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('User or password invalid');
     }
+    const acessToken = this.signJwtAsync(user);
+    const refreshToken = this.generateRefreshToken(user);
+
+    const tokens = await Promise.all([acessToken, refreshToken]);
+
+    await this.cacheManager.set(
+      `refresh_token:${user.id}`,
+      this.hashingService.hash(await refreshToken),
+      this.config.jwtTtlRefresh,
+    );
+
+    return { tokens, user };
+  }
+
+  async refreshToken(refreshToken: RefreshTokenDto): Promise<string> {
+    const invalidToken = 'Invalid or ExpiredRefresh Token';
+    try {
+      const sub: Jwt = await this.jwtService.verifyAsync(
+        refreshToken.refreshToken,
+        this.config,
+      );
+
+      const user = await this.userRepository.findOneBy({
+        id: sub.sub,
+      });
+
+      if (!user) {
+        throw new Error(invalidToken);
+      }
+
+      const cacheToken = await this.cacheManager.get<string>(
+        `refresh_token:${user.id}`,
+      );
+
+      if (!cacheToken) {
+        throw new Error(invalidToken);
+      }
+      const isTokenValid = await this.hashingService.compare(
+        refreshToken.refreshToken,
+        cacheToken,
+      );
+      if (!isTokenValid) {
+        throw new Error(invalidToken);
+      }
+
+      return this.signJwtAsync(user);
+    } catch {
+      throw new UnauthorizedException(invalidToken);
+    }
+  }
+
+  async logout(id: string): Promise<boolean> {
+    const refreshTokenDeleted = await this.cacheManager.del(
+      `refresh_token:${id}`,
+    );
+    return refreshTokenDeleted;
+  }
+
+  private async signJwtAsync(user: User): Promise<string> {
     const payload: JwtPayload = {
       sub: user.id,
       email: user.email,
@@ -47,7 +111,19 @@ export class AuthService {
     };
 
     const acessToken = await this.jwtService.signAsync(payload);
+    return acessToken;
+  }
 
-    return { acessToken, user };
+  private async generateRefreshToken(user: User): Promise<string> {
+    const payload: Jwt = {
+      sub: user.id,
+      aud: this.config.aud,
+      iss: this.config.iss,
+      secret: this.config.secret,
+      exp: this.config.jwtTtlRefresh,
+    };
+
+    const acessToken = await this.jwtService.signAsync(payload);
+    return acessToken;
   }
 }
