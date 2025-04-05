@@ -11,9 +11,8 @@ export default registerAs('app', () => ({
     autoLoadEntities: true,
   },
   cache: {
-    store: process.env.CACHE_STORE,
-    host: process.env.CACHE_HOST,
-    port: Number(process.env.CACHE_PORT),
-    ttl: Number(process.env.CACHE_TTL),
+    url: process.env.CACHE_URL,
+    lruSize: Number(process.env.CACHE_LRU_SIZE) || 5000,
+    ttl: Number(process.env.CACHE_TTL) || 60,
   },
 }));

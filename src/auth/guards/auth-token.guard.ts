@@ -12,6 +12,7 @@ import { ConfigType } from '@nestjs/config';
 import { REQUEST_TOKEN_JWT_PAYLOAD } from '../auth.constants';
 import { JwtPayload } from '../interfaces/jwt-interface.interface';
 import { RequestWithCookies } from '../interfaces/request-with-cookies.interface';
+import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class AuthTokenGuard implements CanActivate {
@@ -19,9 +20,19 @@ export class AuthTokenGuard implements CanActivate {
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly config: ConfigType<typeof jwtConfig>,
+    private readonly reflector: Reflector,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (isPublic) {
+      return true;
+    }
+
     const request: Request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromCookies(request);
     if (!token) {

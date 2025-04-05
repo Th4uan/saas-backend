@@ -4,6 +4,7 @@ import {
   HttpCode,
   Inject,
   Post,
+  Query,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -16,8 +17,6 @@ import { IsPublic } from 'src/common/decorators/is-public.decorator';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RefreshTokenParam } from './params/refresh-token.param';
 import { AuthTokenGuard } from './guards/auth-token.guard';
-import { TokenPayloadParam } from './params/token-payload.param';
-import { JwtPayload } from './interfaces/jwt-interface.interface';
 
 @UseGuards(AuthTokenGuard)
 @Controller('api/v1/auth')
@@ -45,13 +44,13 @@ export class AuthController {
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
       maxAge: this.cookie.maxAgeRefresh,
     });
-    return {
+    return res.json({
       message: 'Login successful',
       user: {
         id: user.id,
         email: loginDto.email,
       },
-    };
+    });
   }
 
   @IsPublic()
@@ -75,12 +74,13 @@ export class AuthController {
   }
 
   @HttpCode(200)
+  @IsPublic()
   @Post('logout')
   async logout(
     @Res({ passthrough: true }) res: Response,
-    @TokenPayloadParam() jwtPayload: JwtPayload,
+    @Query('id') id: string,
   ) {
-    await this.authService.logout(jwtPayload.sub);
+    await this.authService.logout(id);
     res.clearCookie('jwt', {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
@@ -93,6 +93,16 @@ export class AuthController {
     });
     return {
       message: 'Logout successful',
+    };
+  }
+
+  @IsPublic()
+  @HttpCode(200)
+  @Post('check')
+  async checkToken(@Query('id') id: string) {
+    const token = await this.authService.checkToken(id);
+    return {
+      message: token,
     };
   }
 }

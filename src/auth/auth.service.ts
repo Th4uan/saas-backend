@@ -46,12 +46,16 @@ export class AuthService {
 
     const tokens = await Promise.all([acessToken, refreshToken]);
 
+    const hashedRefreshToken = await this.hashingService.hash(tokens[1]);
+
     await this.cacheManager.set(
       `refresh_token:${user.id}`,
-      this.hashingService.hash(await refreshToken),
+      hashedRefreshToken,
       this.config.jwtTtlRefresh,
     );
 
+    const valor = await this.cacheManager.get(`refresh_token:${user.id}`);
+    console.log(valor);
     return { tokens, user };
   }
 
@@ -97,6 +101,15 @@ export class AuthService {
       `refresh_token:${id}`,
     );
     return refreshTokenDeleted;
+  }
+
+  async checkToken(id: string): Promise<string> {
+    const token = await this.cacheManager.get<string>(`refresh_token:${id}`);
+    if (!token) {
+      throw new UnauthorizedException('Invalid or Expired Refresh Token');
+    }
+    console.log(this.cacheManager.stores);
+    return token;
   }
 
   private async signJwtAsync(user: User): Promise<string> {
