@@ -15,4 +15,9 @@ export default registerAs('app', () => ({
     lruSize: Number(process.env.CACHE_LRU_SIZE) || 5000,
     ttl: Number(process.env.CACHE_TTL) || 60,
   },
+  throttle: {
+    ttl: Number(process.env.THROTTLE_TTL) || 60000,
+    limit: Number(process.env.THROTTLE_LIMIT) || 60,
+    blockDuration: Number(process.env.THROTTLE_BLOCK_DURATION) || 5000,
+  },
 }));

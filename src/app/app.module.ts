@@ -10,9 +10,24 @@ import { UserModule } from 'src/user/user.module';
 import { RedisClientOptions } from 'redis';
 import { createKeyv, Keyv } from '@keyv/redis';
 import { CacheableMemory } from 'cacheable';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule.forFeature(appConfig)],
+      inject: [appConfig.KEY],
+      useFactory: (config: ConfigType<typeof appConfig>) => {
+        return [
+          {
+            ttl: config.throttle.ttl,
+            limit: config.throttle.limit,
+            blockDuration: config.throttle.blockDuration,
+          },
+        ];
+      },
+    }),
     ConfigModule.forRoot({
       envFilePath: 'env/.env',
     }),
@@ -55,6 +70,12 @@ import { CacheableMemory } from 'cacheable';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
