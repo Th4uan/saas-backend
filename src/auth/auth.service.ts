@@ -54,8 +54,7 @@ export class AuthService {
       this.config.jwtTtlRefresh,
     );
 
-    const valor = await this.cacheManager.get(`refresh_token:${user.id}`);
-    console.log(valor);
+    await this.cacheManager.get(`refresh_token:${user.id}`);
     return { tokens, user };
   }
 
@@ -108,7 +107,6 @@ export class AuthService {
     if (!token) {
       throw new UnauthorizedException('Invalid or Expired Refresh Token');
     }
-    console.log(this.cacheManager.stores);
     return token;
   }
 
