@@ -58,10 +58,10 @@ import { APP_GUARD } from '@nestjs/core';
             new Keyv({
               store: new CacheableMemory({
                 ttl: config.cache.ttl,
-                lruSize: 5000,
+                lruSize: config.cache.lruSize,
               }),
             }),
-            createKeyv('redis://localhost:6379'),
+            createKeyv(config.cache.url),
           ],
         };
       },
