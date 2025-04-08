@@ -3,6 +3,7 @@ import { AppModule } from './app/app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,6 +21,14 @@ async function bootstrap() {
     credentials: process.env.CORS_CREDENTIALS === 'true',
   });
 
+  const config = new DocumentBuilder()
+    .setTitle('Saas API')
+    .setDescription('Saas API endpoints')
+    .setVersion('1.0')
+    .addTag('saas')
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, documentFactory);
   await app.listen(process.env.APP_PORT ?? 3000);
 }
 bootstrap();
