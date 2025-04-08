@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { HashingService } from 'src/auth/hashing/hashing.service';
+import { UserRoleEnum } from './enums/user-role.enum';
 
 @Injectable()
 export class UserService {
@@ -19,7 +20,7 @@ export class UserService {
       username: createUserDto.username,
       fullName: createUserDto.fullName,
       email: createUserDto.email,
-      role: 'admin',
+      role: UserRoleEnum.Admin,
       password: pass,
     };
 
@@ -40,11 +41,15 @@ export class UserService {
       username: createUserDto.username,
       fullName: createUserDto.fullName,
       email: createUserDto.email,
-      role: 'member',
+      role: UserRoleEnum.Member,
       password: hashPass,
     };
 
     const user: User = this.userRepository.create(userData);
+
+    if (!user) {
+      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
+    }
 
     await this.userRepository.save(user);
 

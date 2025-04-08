@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   HttpCode,
+  HttpStatus,
   Inject,
   Post,
   Query,
@@ -17,7 +18,15 @@ import { IsPublic } from 'src/common/decorators/is-public.decorator';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RefreshTokenParam } from './params/refresh-token.param';
 import { AuthTokenGuard } from './guards/auth-token.guard';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @UseGuards(AuthTokenGuard)
 @Controller('api/v1/auth')
 export class AuthController {
@@ -27,6 +36,39 @@ export class AuthController {
     private readonly cookie: ConfigType<typeof cookieConfig>,
   ) {}
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User auth login',
+    example: {
+      message: 'Login successful',
+      user: {
+        id: 'exemplodeIDGrande',
+        email: 'teste@gmail.com',
+      },
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'User or password invalid',
+    example: {
+      statusCode: HttpStatus.UNAUTHORIZED,
+      message: 'User or password invalid',
+      error: 'Unauthorized',
+    },
+  })
+  @ApiBody({
+    description: 'User Credentials',
+    required: true,
+    type: LoginDto,
+    examples: {
+      example: {
+        value: {
+          email: 'joaoTeste@gmail.com',
+          password: 'suasenha123',
+        },
+      },
+    },
+  })
   @HttpCode(200)
   @IsPublic()
   @Post()
@@ -53,6 +95,23 @@ export class AuthController {
     });
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Reauthenticate user',
+    example: {
+      message: 'Reauthenticate sucessful',
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Invalid or Expired Refresh Token',
+    example: {
+      statusCode: HttpStatus.UNAUTHORIZED,
+      message: 'Invalid or Expired Refresh Token',
+      error: 'Unauthorized',
+    },
+  })
+  @ApiCookieAuth('refresh_token')
   @IsPublic()
   @HttpCode(201)
   @Post('refresh')
@@ -73,6 +132,38 @@ export class AuthController {
     };
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Logout successful',
+    example: {
+      message: 'Logout successful',
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Invalid or Expired Refresh Token',
+    example: {
+      statusCode: HttpStatus.UNAUTHORIZED,
+      message: 'Invalid or Expired Refresh Token',
+      error: 'Unauthorized',
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Forbidden',
+    example: {
+      statusCode: HttpStatus.FORBIDDEN,
+      message: 'Forbidden',
+      error: 'Forbidden',
+    },
+  })
+  @ApiQuery({
+    name: 'id',
+    required: true,
+    description: 'ID of the user',
+    type: String,
+    example: 'exemplodeIDGrande',
+  })
   @HttpCode(200)
   @IsPublic()
   @Post('logout')
@@ -96,6 +187,29 @@ export class AuthController {
     };
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Check token successful',
+    example: {
+      message: 'valid token',
+    },
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Invalid or Expired Refresh Token',
+    example: {
+      statusCode: HttpStatus.UNAUTHORIZED,
+      message: 'Invalid or Expired Refresh Token',
+      error: 'Unauthorized',
+    },
+  })
+  @ApiQuery({
+    name: 'id',
+    required: true,
+    description: 'ID of the user',
+    type: String,
+    example: 'exemplodeIDGrande',
+  })
   @IsPublic()
   @HttpCode(200)
   @Post('check')

@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserRoleEnum } from '../enums/user-role.enum';
 
 @Entity()
 export class User {
@@ -21,7 +22,7 @@ export class User {
   email: string;
 
   @Column()
-  role: string;
+  role: UserRoleEnum;
 
   @Column()
   password: string;

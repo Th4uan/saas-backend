@@ -28,7 +28,11 @@ async function bootstrap() {
     .addTag('saas')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup(
+    process.env.SWAGGER_URL ?? '/api-docs',
+    app,
+    documentFactory,
+  );
   await app.listen(process.env.APP_PORT ?? 3000);
 }
 bootstrap();
