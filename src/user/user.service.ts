@@ -13,6 +13,26 @@ export class UserService {
     private readonly hashingService: HashingService,
   ) {}
 
+  async createAdmin(createUserDto: CreateUserDto) {
+    const pass = await this.hashingService.hash(createUserDto.password);
+    const userData = {
+      username: createUserDto.username,
+      fullName: createUserDto.fullName,
+      email: createUserDto.email,
+      role: 'admin',
+      password: pass,
+    };
+
+    const user: User = this.userRepository.create(userData);
+
+    if (!user) {
+      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
+    }
+    await this.userRepository.save(user);
+
+    return user;
+  }
+
   async createMember(createUserDto: CreateUserDto) {
     const hashPass = await this.hashingService.hash(createUserDto.password);
 

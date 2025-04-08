@@ -13,6 +13,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 import { IsPublic } from 'src/common/decorators/is-public.decorator';
+import { isAdminGuard } from 'src/common/guards/is-admin.guard';
 
 @UseGuards(AuthTokenGuard)
 @Controller('api/v1/user')
@@ -30,6 +31,21 @@ export class UserController {
     return user;
   }
 
+  @UseGuards(isAdminGuard)
+  @Post('admin')
+  async createAdmin(@Body() createUserDto: CreateUserDto) {
+    if (!createUserDto) {
+      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
+    }
+
+    const user = await this.userService.createAdmin(createUserDto);
+
+    if (!user) {
+      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
+    }
+
+    return user;
+  }
   // @Get()
   // findAll() {
   //   return this.userService.findAll();
