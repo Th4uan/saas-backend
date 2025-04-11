@@ -13,7 +13,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 import { IsPublic } from 'src/common/decorators/is-public.decorator';
-import { isAdminGuard } from 'src/common/guards/is-admin.guard';
 import {
   ApiBody,
   ApiCookieAuth,
@@ -21,6 +20,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { UserRoleEnum } from './enums/user-role.enum';
 
 @ApiTags('User')
 @UseGuards(AuthTokenGuard)
@@ -47,7 +48,7 @@ export class UserController {
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiBody({ type: CreateUserDto })
   @ApiCookieAuth('jwt')
-  @UseGuards(isAdminGuard)
+  @Roles(UserRoleEnum.Admin)
   @Post('admin')
   async createAdmin(@Body() createUserDto: CreateUserDto) {
     if (!createUserDto) {
