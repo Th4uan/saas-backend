@@ -41,7 +41,7 @@ export class UserService {
       username: createUserDto.username,
       fullName: createUserDto.fullName,
       email: createUserDto.email,
-      role: UserRoleEnum.Member,
+      role: UserRoleEnum.Attendant,
       password: hashPass,
     };
 

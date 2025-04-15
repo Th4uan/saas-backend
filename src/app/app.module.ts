@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigType } from '@nestjs/config';
@@ -14,6 +19,8 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ReportsModule } from 'src/reports/reports.module';
 import { DayMiddleware } from 'src/middlewares/day-or-month.middleware';
+import { ClientsModule } from 'src/clients/clients.module';
+import { SupabaseModule } from 'src/supabase/supabase.module';
 
 @Module({
   imports: [
@@ -71,6 +78,8 @@ import { DayMiddleware } from 'src/middlewares/day-or-month.middleware';
     UserModule,
     AuthModule,
     ReportsModule,
+    ClientsModule,
+    SupabaseModule,
   ],
   controllers: [AppController],
   providers: [
@@ -83,6 +92,8 @@ import { DayMiddleware } from 'src/middlewares/day-or-month.middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(DayMiddleware).forRoutes('reports');
+    consumer
+      .apply(DayMiddleware)
+      .forRoutes({ path: 'reports', method: RequestMethod.GET });
   }
 }

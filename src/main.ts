@@ -21,6 +21,8 @@ async function bootstrap() {
     credentials: process.env.CORS_CREDENTIALS === 'true',
   });
 
+  app.setGlobalPrefix(process.env.APP_PREFIX ?? 'api');
+
   const config = new DocumentBuilder()
     .setTitle('Saas API')
     .setDescription('Saas API endpoints')
