@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Param,
   Post,
   UploadedFile,
@@ -8,7 +9,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SupabaseService } from './supabase.service';
 
-@Controller('database')
+@Controller('documents')
 export class SupabaseController {
   constructor(private readonly supabaseService: SupabaseService) {}
 
@@ -22,11 +23,20 @@ export class SupabaseController {
     };
   }
 
-  @Post('download/:fileName')
+  @Get('download/:fileName')
   async downloadFile(@Param('fileName') fileName: string) {
     const data = await this.supabaseService.downloadFile(fileName);
     return {
       message: 'File downloaded successfully',
+      data,
+    };
+  }
+
+  @Get('view/:fileName')
+  viewFile(@Param('fileName') fileName: string) {
+    const data = this.supabaseService.viewFile(fileName);
+    return {
+      message: 'File viewed successfully',
       data,
     };
   }

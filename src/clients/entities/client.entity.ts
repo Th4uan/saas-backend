@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { CivilStatusEnum } from '../enum/civil-status.enum';
 
 export class Client {
   @PrimaryGeneratedColumn('uuid')
@@ -17,7 +18,7 @@ export class Client {
   @ManyToMany(() => Address, (address) => address.id)
   address: Address;
 
-  @Column()
+  @Column({ unique: true })
   cpf: string;
 
   @Column()
@@ -27,10 +28,10 @@ export class Client {
   phoneIsWhatsApp: boolean;
 
   @Column()
-  password: string;
-
-  @Column()
   profission: string;
+
+  @Column({ enum: CivilStatusEnum })
+  civilStatus: CivilStatusEnum;
 
   @CreateDateColumn()
   createdAt: Date;

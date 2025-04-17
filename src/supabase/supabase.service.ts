@@ -57,4 +57,19 @@ export class SupabaseService {
 
     return Buffer.from(arrayBuffer);
   }
+
+  viewFile(fileName: string) {
+    if (fileName == '' || fileName == null) {
+      throw new BadRequestException('file name is null or empty');
+    }
+
+    const { data } = this.supabase.storage
+      .from(this.bucket)
+      .getPublicUrl(`${this.bucket}/${fileName}`);
+
+    if (!data) {
+      throw new NotFoundException('File not found');
+    }
+    return data.publicUrl;
+  }
 }
