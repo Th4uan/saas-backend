@@ -19,6 +19,7 @@ Este projeto é o backend de um sistema SaaS voltado para clínicas de psicologi
 > **Pré-requisitos**:  
 > - [Node.js](https://nodejs.org/) v23 ou superior  
 > - [Docker](https://www.docker.com/)
+> - [Supabase](https://supabase.com/) conta no supabase
 
 ### Passo a passo:
 
@@ -26,10 +27,13 @@ Este projeto é o backend de um sistema SaaS voltado para clínicas de psicologi
 # 1. Instale as dependências
 npm install
 
-# 2. Suba os containers (Postgres, Redis, etc)
+# 2. Copie o env-example e configure as credenciais conforme necessário
+cp env/env-example env/.env
+
+# 3. Suba os containers (Postgres, Redis, etc)
 docker compose up -d
 
-# 3. Inicie a aplicação
+# 4. Inicie a aplicação
 npm run start
 ```
     
@@ -39,4 +43,4 @@ O servidor estará disponível em: http://localhost:3000
 
 A autenticação é feita via JWT armazenado em cookies HTTP-only para maior segurança e controle de sessões.
 
-    Feito por Thauan Rodrigues
+  Feito por Thauan Rodrigues
