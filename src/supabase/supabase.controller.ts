@@ -1,13 +1,18 @@
 import {
+  BadRequestException,
+  Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
   UploadedFile,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { SupabaseService } from './supabase.service';
+import { PasswordDto } from './dto/password.dto';
 
 @Controller('documents')
 export class SupabaseController {
@@ -37,6 +42,45 @@ export class SupabaseController {
     const data = this.supabaseService.viewFile(fileName);
     return {
       message: 'File viewed successfully',
+      data,
+    };
+  }
+
+  @Post('sign/upload')
+  @UseInterceptors(FilesInterceptor('files', 2))
+  async signUpload(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body() password: PasswordDto,
+  ) {
+    if (files.length !== 2) {
+      throw new BadRequestException(
+        'Please upload exactly two files: the PDF and the PFX file',
+      );
+    }
+
+    const [pdfFile, pfxFile] = files;
+
+    if (!pdfFile || !pfxFile) {
+      throw new BadRequestException('Invalid files');
+    }
+
+    const signedPdf = await this.supabaseService.signUpload(
+      pdfFile,
+      pfxFile,
+      password.password,
+    );
+
+    return {
+      message: 'File signed and save sucessfully',
+      data: signedPdf,
+    };
+  }
+
+  @Delete('delete/:fileName')
+  async deleteFile(@Param('fileName') fileName: string) {
+    const data = await this.supabaseService.deleteFile(fileName);
+    return {
+      message: 'File deleted successfully',
       data,
     };
   }

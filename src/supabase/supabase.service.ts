@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { signPdf } from './utils/pdf-signer.utils';
 
 @Injectable()
 export class SupabaseService {
@@ -71,5 +72,62 @@ export class SupabaseService {
       throw new NotFoundException('File not found');
     }
     return data.publicUrl;
+  }
+
+  async signUpload(
+    file: Express.Multer.File,
+    pfxBuffer: Express.Multer.File,
+    password: string,
+  ) {
+    if (!file) {
+      throw new BadRequestException('No file provided');
+    }
+
+    if (!pfxBuffer) {
+      throw new BadRequestException('No PFX file provided');
+    }
+
+    if (password == '' || password == null || !password) {
+      throw new BadRequestException('No password provided');
+    }
+
+    const signedPdf = await signPdf(file.buffer, pfxBuffer.buffer, password);
+
+    if (!signedPdf) {
+      throw new BadRequestException('Error signing PDF');
+    }
+
+    const filePath = `${this.bucket}/${file.originalname}`;
+
+    const { data, error } = await this.supabase.storage
+      .from(this.bucket)
+      .upload(filePath, signedPdf, {
+        contentType: file.mimetype,
+        upsert: true,
+      });
+
+    if (error) {
+      console.log(error);
+      throw new BadRequestException('Error uploading file');
+    }
+
+    return data;
+  }
+
+  async deleteFile(fileName: string) {
+    if (fileName == '' || fileName == null) {
+      throw new BadRequestException('file name is null or empty');
+    }
+
+    const { data, error } = await this.supabase.storage
+      .from(this.bucket)
+      .remove([`${this.bucket}/${fileName}`]);
+
+    if (error) {
+      console.log(error);
+      throw new NotFoundException('File not found');
+    }
+
+    return data;
   }
 }
