@@ -31,25 +31,12 @@ docker compose up -d
 
 # 3. Inicie a aplicação
 npm run start
-
-    O servidor estará disponível em: http://localhost:3000
+```
+    
+O servidor estará disponível em: http://localhost:3000
 
 🔐 Autenticação
 
 A autenticação é feita via JWT armazenado em cookies HTTP-only para maior segurança e controle de sessões.
-📁 Estrutura do Projeto
-
-src/
-├── auth/              # Módulo de autenticação
-├── users/             # Usuários da plataforma (admin, psicólogos, etc)
-├── patients/          # Gestão de pacientes
-├── appointments/      # Agendamentos e sessões
-├── common/            # Middlewares, Pipes, Guards e Interceptors
-├── config/            # Configuração de ambiente e integrações
-
-🤝 Contribuindo
-
-Contribuições são bem-vindas!
-Sinta-se à vontade para abrir uma issue com dúvidas, sugestões ou problemas encontrados, ou envie um pull request com melhorias.
 
     Feito por Thauan Rodrigues
