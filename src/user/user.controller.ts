@@ -25,7 +25,7 @@ import { UserRoleEnum } from './enums/user-role.enum';
 
 @ApiTags('User')
 @UseGuards(AuthTokenGuard)
-@Controller('api/v1/user')
+@Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
