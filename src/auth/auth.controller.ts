@@ -28,7 +28,7 @@ import {
 
 @ApiTags('Auth')
 @UseGuards(AuthTokenGuard)
-@Controller('api/v1/auth')
+@Controller('/auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
@@ -78,13 +78,13 @@ export class AuthController {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
-      maxAge: this.cookie.maxAge,
+      maxAge: this.cookie.maxAge * 1000,
     });
     res.cookie('refresh_token', tokens[1], {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
-      maxAge: this.cookie.maxAgeRefresh,
+      maxAge: this.cookie.maxAgeRefresh * 1000,
     });
     return res.json({
       message: 'Login successful',
@@ -124,7 +124,7 @@ export class AuthController {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
-      maxAge: this.cookie.maxAge,
+      maxAge: this.cookie.maxAge * 1000,
     });
 
     return {
