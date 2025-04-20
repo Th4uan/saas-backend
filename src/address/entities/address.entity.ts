@@ -13,7 +13,7 @@ export class Address {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToMany(() => Client, (client) => client.id)
+  @OneToMany(() => Client, (client) => client.address)
   client: Client[];
 
   @Column()

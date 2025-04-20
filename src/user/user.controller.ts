@@ -33,6 +33,7 @@ export class UserController {
   @ApiResponse({ status: 400, description: 'Invalid Data' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiBody({ type: CreateUserDto })
+  @ApiCookieAuth('jwt')
   @IsPublic()
   @Post()
   async registerUser(@Body() createUserDto: CreateUserDto) {

@@ -28,6 +28,7 @@ async function bootstrap() {
     .setDescription('Saas API endpoints')
     .setVersion('1.0')
     .addTag('saas')
+    .addCookieAuth('jwt')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(

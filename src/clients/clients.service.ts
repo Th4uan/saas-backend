@@ -17,7 +17,7 @@ export class ClientsService {
     private readonly adressService: AddressService,
     private readonly encryptionService: EncryptionService,
   ) {}
-  async create(createClientDto: CreateClientDto) {
+  async create(createClientDto: CreateClientDto): Promise<ClientResponseDto> {
     if (!createClientDto) {
       throw new BadRequestException('Invalid client data');
     }
@@ -40,13 +40,32 @@ export class ClientsService {
 
     await this.clientRepository.save(client);
 
-    return client;
+    const data: ClientResponseDto = {
+      id: client.id,
+      fullName: client.fullName,
+      cpf: this.encryptionService.decrypt(client.cpf),
+      phone: client.phone,
+      phoneIsWhatsApp: client.phoneIsWhatsApp,
+      profission: client.profission,
+      civilStatus: client.civilStatus,
+      address: {
+        id: client.address.id,
+        street: client.address.street,
+        number: client.address.number,
+        complement: client.address.complement,
+        neighborhood: client.address.neighborhood,
+        city: client.address.city,
+        state: client.address.state,
+        zipCode: client.address.zipCode,
+      },
+    };
+    return data;
   }
 
   async findAllClients(
     pagination: PaginationDto,
   ): Promise<ClientResponseDto[]> {
-    const { limit, offset } = pagination;
+    const { limit = 10, offset = 0 } = pagination;
     const skip = (offset - 1) * limit;
 
     if (limit <= 0 || offset <= 0) {

@@ -18,8 +18,8 @@ export class Client {
   @Column()
   fullName: string;
 
-  @ManyToOne(() => Address, (address) => address.id)
-  @JoinColumn()
+  @ManyToOne(() => Address, (address) => address.client)
+  @JoinColumn({ name: 'address_id' })
   address: Address;
 
   @Column({ unique: true })

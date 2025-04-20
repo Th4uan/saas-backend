@@ -6,26 +6,117 @@ import {
   // Patch,
   Param,
   Delete,
+  BadRequestException,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 // import { UpdateClientDto } from './dto/update-client.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
+import { ClientResponseDto } from './dto/client-response.dto';
 
+@ApiTags('clients')
+@ApiCookieAuth('jwt')
+@UseGuards(AuthTokenGuard)
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
+  @ApiResponse({
+    status: 201,
+    description: 'Client created successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid client data',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Error creating client',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
+  @ApiBody({
+    type: CreateClientDto,
+    description: 'Client data',
+  })
   @Post()
-  async create(@Body() createClientDto: CreateClientDto) {
-    return this.clientsService.create(createClientDto);
+  async create(
+    @Body() createClientDto: CreateClientDto,
+  ): Promise<ClientResponseDto> {
+    if (!createClientDto) {
+      throw new BadRequestException('Invalid client data');
+    }
+    const data = await this.clientsService.create(createClientDto);
+
+    if (!data) {
+      throw new BadRequestException('Error creating client');
+    }
+    return data;
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Clients retrieved successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid pagination parameters',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Limit for pagination',
+  })
+  @ApiQuery({
+    name: 'offset',
+    required: false,
+    description: 'Offset for pagination',
+  })
   @Get()
-  async findAllClients(pagination: PaginationDto) {
-    return this.clientsService.findAllClients(pagination);
+  async findAllClients(@Query() pagination: PaginationDto) {
+    const recados = await this.clientsService.findAllClients(pagination);
+    if (recados.length <= 0) {
+      throw new BadRequestException('No clients found');
+    }
+    return recados;
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Client retrieved successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid client ID',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Client not found',
+  })
+  @ApiBody({
+    type: String,
+    description: 'Client ID',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden',
+  })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.clientsService.findOne(id);
