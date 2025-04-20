@@ -2,6 +2,7 @@ import { Address } from 'src/address/entities/address.entity';
 import {
   Column,
   CreateDateColumn,
+  Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -9,6 +10,7 @@ import {
 } from 'typeorm';
 import { CivilStatusEnum } from '../enum/civil-status.enum';
 
+@Entity('clients')
 export class Client {
   @PrimaryGeneratedColumn('uuid')
   id: string;
