@@ -3,8 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -14,8 +13,7 @@ export class Address {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToMany(() => Client, (client) => client.id)
-  @JoinTable({ name: 'client_address' })
+  @OneToMany(() => Client, (client) => client.id)
   client: Client[];
 
   @Column()

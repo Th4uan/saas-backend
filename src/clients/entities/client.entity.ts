@@ -2,7 +2,8 @@ import { Address } from 'src/address/entities/address.entity';
 import {
   Column,
   CreateDateColumn,
-  ManyToMany,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,7 +16,8 @@ export class Client {
   @Column()
   fullName: string;
 
-  @ManyToMany(() => Address, (address) => address.id)
+  @ManyToOne(() => Address, (address) => address.id)
+  @JoinColumn()
   address: Address;
 
   @Column({ unique: true })
