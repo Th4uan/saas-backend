@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
-import { UpdateClientDto } from './dto/update-client.dto';
+// import { UpdateClientDto } from './dto/update-client.dto';
 import { Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -87,15 +87,60 @@ export class ClientsService {
     }));
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
+  async findOne(id: string): Promise<ClientResponseDto> {
+    if (id == '' || id == null) {
+      throw new BadRequestException('Invalid client ID');
+    }
+
+    const client = await this.clientRepository.findOne({
+      where: { id },
+      relations: ['address'],
+    });
+
+    if (!client) {
+      throw new BadRequestException('Client not found');
+    }
+
+    const clientData: ClientResponseDto = {
+      id: client.id,
+      fullName: client.fullName,
+      cpf: this.encryptionService.decrypt(client.cpf),
+      phone: client.phone,
+      phoneIsWhatsApp: client.phoneIsWhatsApp,
+      profission: client.profission,
+      civilStatus: client.civilStatus,
+      address: {
+        id: client.address.id,
+        street: client.address.street,
+        number: client.address.number,
+        complement: client.address.complement,
+        neighborhood: client.address.neighborhood,
+        city: client.address.city,
+        state: client.address.state,
+        zipCode: client.address.zipCode,
+      },
+    };
+    return clientData;
   }
 
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
-  }
+  // async update(id: string, updateClientDto: UpdateClientDto) {
 
-  remove(id: number) {
-    return `This action removes a #${id} client`;
+  // }
+
+  async remove(id: string) {
+    if (id == '' || id == null) {
+      throw new BadRequestException('Invalid client ID');
+    }
+
+    const client = await this.clientRepository.findOne({
+      where: { id },
+      relations: ['address'],
+    });
+
+    if (!client) {
+      throw new BadRequestException('Client not found');
+    }
+
+    return await this.clientRepository.delete(id);
   }
 }
