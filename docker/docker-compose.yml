@@ -1,0 +1,45 @@
+services:
+  database:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: teste
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: teste
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - test_network
+    
+
+  redis:
+    image: redis:7
+    container_name: redis_app
+    ports:
+      - "6379:6379"
+    restart: always
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - test_network
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: nest_app
+    ports:
+      - "3000:3000"
+    env_file:
+      - ../env/.env
+    depends_on:
+      - database
+      - redis
+    networks:
+      - test_network
+volumes:
+  data:
+networks:
+  test_network:
+    driver: bridge

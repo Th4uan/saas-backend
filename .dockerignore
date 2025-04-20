@@ -1,0 +1,24 @@
+# Ignorar pastas de volume
+data/
+docker/data/
+
+# Dependências
+node_modules
+npm-debug.log
+
+# Logs e arquivos temporários
+logs
+*.log
+.DS_Store
+
+# Arquivos de ambiente
+.env*
+!.env.example
+
+# Arquivos de desenvolvimento
+dist
+coverage
+.git
+.gitignore
+.idea
+.vscode
