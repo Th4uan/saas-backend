@@ -20,6 +20,5 @@ COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
-# Comando para executar o aplicativo
 CMD ["node", "dist/main.js"]
 
