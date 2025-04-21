@@ -89,7 +89,9 @@ export class ClientsController {
     description: 'Offset for pagination',
   })
   @Get()
-  async findAllClients(@Query() pagination: PaginationDto) {
+  async findAllClients(
+    @Query() pagination: PaginationDto,
+  ): Promise<ClientResponseDto[]> {
     const recados = await this.clientsService.findAllClients(pagination);
     if (recados.length <= 0) {
       throw new BadRequestException('No clients found');
@@ -118,8 +120,15 @@ export class ClientsController {
     description: 'Forbidden',
   })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.clientsService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<ClientResponseDto> {
+    if (id == '' || id == null) {
+      throw new BadRequestException('Invalid client ID');
+    }
+    const client = await this.clientsService.findOne(id);
+    if (!client) {
+      throw new BadRequestException('Client not found');
+    }
+    return client;
   }
 
   // @Patch(':id')
@@ -129,6 +138,9 @@ export class ClientsController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
+    if (id == '' || id == null) {
+      throw new BadRequestException('Invalid client ID');
+    }
     return this.clientsService.remove(id);
   }
 }
