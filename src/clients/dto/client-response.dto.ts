@@ -20,4 +20,8 @@ export class ClientResponseDto {
   profission: string;
   civilStatus: CivilStatusEnum;
   address: AddressResponseDto;
+  rg: string;
+  birthDate: Date;
+  escolarity: string;
+  nacionality: string;
 }

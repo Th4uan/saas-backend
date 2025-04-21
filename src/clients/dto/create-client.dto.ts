@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsDate,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -38,4 +39,21 @@ export class CreateClientDto {
   @ValidateNested()
   @Type(() => CreateAddressDto)
   adress: CreateAddressDto;
+
+  @IsNotEmpty()
+  @IsString()
+  rg: string;
+
+  @IsNotEmpty()
+  @IsDate()
+  @Type(() => Date)
+  birthDate: Date;
+
+  @IsNotEmpty()
+  @IsString()
+  escolarity: string;
+
+  @IsNotEmpty()
+  @IsString()
+  nacionality: string;
 }

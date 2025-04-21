@@ -37,6 +37,18 @@ export class Client {
   @Column({ enum: CivilStatusEnum })
   civilStatus: CivilStatusEnum;
 
+  @Column()
+  rg: string;
+
+  @Column()
+  birthDate: Date;
+
+  @Column()
+  escolarity: string;
+
+  @Column()
+  nacionality: string;
+
   @CreateDateColumn()
   createdAt: Date;
 

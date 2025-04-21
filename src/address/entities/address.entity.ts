@@ -20,7 +20,7 @@ export class Address {
   street: string;
 
   @Column({ default: 'S/N' })
-  number: string;
+  number?: string;
 
   @Column()
   neighborhood: string;

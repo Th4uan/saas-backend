@@ -137,7 +137,7 @@ export class ClientsController {
   // }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     if (id == '' || id == null) {
       throw new BadRequestException('Invalid client ID');
     }
