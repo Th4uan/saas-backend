@@ -14,5 +14,6 @@ import { EncryptionModule } from 'src/common/utils/encryption/encryption.module'
   ],
   controllers: [ClientsController],
   providers: [ClientsService],
+  exports: [ClientsService],
 })
 export class ClientsModule {}
