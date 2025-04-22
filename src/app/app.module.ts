@@ -96,6 +96,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(DayMiddleware)
-      .forRoutes({ path: 'reports', method: RequestMethod.GET });
+      .forRoutes({ path: 'services', method: RequestMethod.GET });
   }
 }

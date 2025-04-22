@@ -7,7 +7,7 @@ import {
 import { CreateServiceDto } from './dto/create-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Service } from './entities/service.entity';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { ClientsService } from 'src/clients/clients.service';
 import { UserService } from 'src/user/user.service';
 import { UserRoleEnum } from 'src/user/enums/user-role.enum';
@@ -169,5 +169,51 @@ export class ServicesService {
     }
 
     return service;
+  }
+
+  async findAllServiceByDay() {
+    const startOfDay: Date = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay: Date = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const services = await this.serviceRepository.find({
+      where: {
+        date: Between(startOfDay, endOfDay),
+      },
+      relations: ['client', 'doctor'],
+    });
+
+    if (!services) {
+      throw new NotFoundException('No services found');
+    }
+
+    const data: ResponseServiceDto[] = services.map((service) => {
+      return {
+        id: service.id,
+        client: {
+          id: service.client.id,
+          fullName: service.client.fullName,
+          phone: service.client.phone,
+          phoneIsWhatsApp: service.client.phoneIsWhatsApp,
+        },
+        doctor: {
+          id: service.doctor.id,
+          fullName: service.doctor.fullName,
+          email: service.doctor.email,
+        },
+        date: service.date,
+        time: service.time,
+        status: service.status,
+        typeService: service.typeService,
+      };
+    });
+
+    if (data.length <= 0) {
+      throw new NotFoundException('No services found');
+    }
+
+    return data;
   }
 }

@@ -123,4 +123,25 @@ export class ServicesController {
     }
     return await this.servicesService.findOneService(id);
   }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Service getted by day',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid date',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Service not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Invalid token',
+  })
+  @Get('day')
+  async findAllServicesByDay() {
+    return this.servicesService.findAllServiceByDay();
+  }
 }
