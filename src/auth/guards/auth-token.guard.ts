@@ -36,7 +36,7 @@ export class AuthTokenGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromCookies(request);
     if (!token) {
-      throw new UnauthorizedException('');
+      throw new UnauthorizedException('Invalid token');
     }
 
     try {

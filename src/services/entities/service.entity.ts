@@ -1,16 +1,26 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ServiceStatusEnum } from '../enum/service-status.enum';
+import { Client } from 'src/clients/entities/client.entity';
+import { User } from 'src/user/entities/user.entity';
 
-@Entity()
+@Entity('services')
 export class Service {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  clientId: string;
+  @ManyToOne(() => Client, (client) => client.services)
+  @JoinColumn({ name: 'client_id' })
+  client: Client;
 
-  @Column()
-  doctorId: string;
+  @ManyToOne(() => User, (user) => user.services)
+  @JoinColumn({ name: 'doctor_id' })
+  doctor: User;
 
   @Column()
   date: Date;

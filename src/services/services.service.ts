@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,8 +11,8 @@ import { Repository } from 'typeorm';
 import { ClientsService } from 'src/clients/clients.service';
 import { UserService } from 'src/user/user.service';
 import { UserRoleEnum } from 'src/user/enums/user-role.enum';
-// import { PaginationDto } from 'src/common/dtos/pagination.dto';
-// import { ResponseServiceDto } from './dto/response-service.dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { ResponseServiceDto } from './dto/response-service.dto';
 
 @Injectable()
 export class ServicesService {
@@ -49,12 +50,12 @@ export class ServicesService {
     }
 
     if (doctor.role !== UserRoleEnum.Doctor) {
-      throw new BadRequestException('User is not a doctor');
+      throw new UnauthorizedException('User is not a doctor');
     }
 
     const data = {
-      clientId: createServiceDto.clientId,
-      doctorId: createServiceDto.doctorId,
+      client: client,
+      doctor: doctor,
       date: createServiceDto.date,
       time: createServiceDto.time,
       status: createServiceDto.status,
@@ -68,27 +69,86 @@ export class ServicesService {
     return service;
   }
 
-  // async findAllServices(
-  //   pagination: PaginationDto,
-  // ): Promise<ResponseServiceDto[]> {
-  //   if (!pagination) {
-  //     throw new BadRequestException('Pagination data is required');
-  //   }
-  //   const { limit = 10, offset = 0 } = pagination;
+  async findAllServices(
+    pagination: PaginationDto,
+  ): Promise<ResponseServiceDto[]> {
+    if (!pagination) {
+      throw new BadRequestException('Pagination data is required');
+    }
+    const { limit = 10, offset = 0 } = pagination;
+    const skip = (offset - 1) * limit;
 
-  //   const services = await this.serviceRepository.find({
-  //     take: limit,
-  //     skip: offset,
-  //   });
+    const services = await this.serviceRepository.find({
+      take: limit,
+      skip: skip,
+      relations: ['client', 'doctor'],
+    });
 
-  //   if (!services) {
-  //     throw new NotFoundException('No services found');
-  //   }
+    if (!services) {
+      throw new NotFoundException('No services found');
+    }
 
-  //   return data;
-  // }
+    const data: ResponseServiceDto[] = services.map((service) => {
+      return {
+        id: service.id,
+        client: {
+          id: service.client.id,
+          fullName: service.client.fullName,
+          phone: service.client.phone,
+          phoneIsWhatsApp: service.client.phoneIsWhatsApp,
+        },
+        doctor: {
+          id: service.doctor.id,
+          fullName: service.doctor.fullName,
+          email: service.doctor.email,
+        },
+        date: service.date,
+        time: service.time,
+        status: service.status,
+        typeService: service.typeService,
+      };
+    });
 
-  findOne(id: number) {
-    return `This action returns a #${id} service`;
+    if (data.length <= 0) {
+      throw new NotFoundException('No services found');
+    }
+
+    return data;
+  }
+
+  async findOneService(id: string): Promise<ResponseServiceDto> {
+    if (id == '' || id == null) {
+      throw new BadRequestException('Service ID is required');
+    }
+
+    const service = await this.serviceRepository.findOne({
+      where: { id },
+      relations: ['client', 'doctor'],
+    });
+
+    if (!service) {
+      throw new NotFoundException('Service not found');
+    }
+
+    const data: ResponseServiceDto = {
+      id: service.id,
+      client: {
+        id: service.client.id,
+        fullName: service.client.fullName,
+        phone: service.client.phone,
+        phoneIsWhatsApp: service.client.phoneIsWhatsApp,
+      },
+      doctor: {
+        id: service.doctor.id,
+        fullName: service.doctor.fullName,
+        email: service.doctor.email,
+      },
+      date: service.date,
+      time: service.time,
+      status: service.status,
+      typeService: service.typeService,
+    };
+
+    return data;
   }
 }

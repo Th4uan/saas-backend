@@ -5,10 +5,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { CivilStatusEnum } from '../enum/civil-status.enum';
+import { Service } from 'src/services/entities/service.entity';
 
 @Entity('clients')
 export class Client {
@@ -48,6 +50,9 @@ export class Client {
 
   @Column()
   nacionality: string;
+
+  @OneToMany(() => Service, (service) => service.client)
+  services: Service[];
 
   @CreateDateColumn()
   createdAt: Date;

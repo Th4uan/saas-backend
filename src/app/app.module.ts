@@ -21,6 +21,7 @@ import { DayMiddleware } from 'src/middlewares/day-or-month.middleware';
 import { ClientsModule } from 'src/clients/clients.module';
 import { SupabaseModule } from 'src/supabase/supabase.module';
 import { EncryptionModule } from 'src/common/utils/encryption/encryption.module';
+import { ServicesModule } from 'src/services/services.module';
 
 @Module({
   imports: [
@@ -80,6 +81,7 @@ import { EncryptionModule } from 'src/common/utils/encryption/encryption.module'
     ClientsModule,
     SupabaseModule,
     EncryptionModule,
+    ServicesModule,
   ],
   controllers: [AppController],
   providers: [
