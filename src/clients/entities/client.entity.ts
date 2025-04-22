@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { CivilStatusEnum } from '../enum/civil-status.enum';
 import { Service } from 'src/services/entities/service.entity';
+import { FilesEntity } from 'src/supabase/entities/files.entity';
 
 @Entity('clients')
 export class Client {
@@ -53,6 +54,9 @@ export class Client {
 
   @OneToMany(() => Service, (service) => service.client)
   services: Service[];
+
+  @OneToMany(() => FilesEntity, (file) => file.client)
+  files: FilesEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

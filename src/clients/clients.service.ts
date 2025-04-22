@@ -118,7 +118,7 @@ export class ClientsService {
     }));
   }
 
-  async findOne(id: string): Promise<ClientResponseDto> {
+  async findOneClient(id: string): Promise<ClientResponseDto> {
     if (id == '' || id == null) {
       throw new BadRequestException('Invalid client ID');
     }
@@ -156,6 +156,22 @@ export class ClientsService {
       },
     };
     return clientData;
+  }
+  async findOneClientEntity(id: string): Promise<Client> {
+    if (id == '' || id == null) {
+      throw new BadRequestException('Invalid client ID');
+    }
+
+    const client = await this.clientRepository.findOne({
+      where: { id },
+      relations: ['address'],
+    });
+
+    if (!client) {
+      throw new BadRequestException('Client not found');
+    }
+
+    return client;
   }
 
   // async update(id: string, updateClientDto: UpdateClientDto) {

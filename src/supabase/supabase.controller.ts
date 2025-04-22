@@ -16,6 +16,7 @@ import { SupabaseService } from './supabase.service';
 import { PasswordDto } from './dto/password.dto';
 import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
+import { FileDto } from './dto/file.dto';
 
 @ApiTags('documents')
 @UseGuards(AuthTokenGuard)
@@ -26,8 +27,11 @@ export class SupabaseController {
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const data = await this.supabaseService.uploadFile(file);
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() fileDto: FileDto,
+  ) {
+    const data = await this.supabaseService.uploadFile(file, fileDto);
     return {
       message: 'File uploaded successfully',
       data,
@@ -64,6 +68,11 @@ export class SupabaseController {
       );
     }
 
+    const fileExpecs: FileDto = {
+      clientId: password.clientId,
+      serviceId: password.serviceId,
+    };
+
     const [pdfFile, pfxFile] = files;
 
     if (!pdfFile || !pfxFile) {
@@ -74,6 +83,7 @@ export class SupabaseController {
       pdfFile,
       pfxFile,
       password.password,
+      fileExpecs,
     );
 
     return {
