@@ -17,7 +17,6 @@ import { createKeyv, Keyv } from '@keyv/redis';
 import { CacheableMemory } from 'cacheable';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { ReportsModule } from 'src/reports/reports.module';
 import { DayMiddleware } from 'src/middlewares/day-or-month.middleware';
 import { ClientsModule } from 'src/clients/clients.module';
 import { SupabaseModule } from 'src/supabase/supabase.module';
@@ -78,7 +77,6 @@ import { EncryptionModule } from 'src/common/utils/encryption/encryption.module'
     }),
     UserModule,
     AuthModule,
-    ReportsModule,
     ClientsModule,
     SupabaseModule,
     EncryptionModule,
