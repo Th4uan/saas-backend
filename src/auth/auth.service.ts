@@ -41,6 +41,7 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('User or password invalid');
     }
+
     const acessToken = this.signJwtAsync(user);
     const refreshToken = this.generateRefreshToken(user);
 
