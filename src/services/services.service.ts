@@ -35,7 +35,9 @@ export class ServicesService {
       throw new NotFoundException('User Not Found');
     }
 
-    const client = await this.clientsService.findOne(createServiceDto.clientId);
+    const client = await this.clientsService.findOneClientEntity(
+      createServiceDto.clientId,
+    );
 
     if (!client) {
       throw new NotFoundException('Client Not Found');
@@ -150,5 +152,22 @@ export class ServicesService {
     };
 
     return data;
+  }
+
+  async findOneServiceEntity(id: string): Promise<Service> {
+    if (id == '' || id == null) {
+      throw new BadRequestException('Service ID is required');
+    }
+
+    const service = await this.serviceRepository.findOne({
+      where: { id },
+      relations: ['client', 'doctor'],
+    });
+
+    if (!service) {
+      throw new NotFoundException('Service not found');
+    }
+
+    return service;
   }
 }
