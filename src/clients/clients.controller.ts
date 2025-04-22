@@ -124,7 +124,7 @@ export class ClientsController {
     if (id == '' || id == null) {
       throw new BadRequestException('Invalid client ID');
     }
-    const client = await this.clientsService.findOne(id);
+    const client = await this.clientsService.findOneClient(id);
     if (!client) {
       throw new BadRequestException('Client not found');
     }
