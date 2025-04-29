@@ -17,7 +17,7 @@ export class Appointment {
   @Column()
   date: Date;
 
-  @Column()
+  @Column('text', { array: true })
   nomes: string[];
 
   @ManyToOne(() => Agreement, (agreement) => agreement.appointments)

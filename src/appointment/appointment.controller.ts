@@ -6,12 +6,15 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { AppointmentService } from './appointment.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 
+@UseGuards(AuthTokenGuard)
 @Controller('appointment')
 @ApiTags('appointment')
 export class AppointmentController {

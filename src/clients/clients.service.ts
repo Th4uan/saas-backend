@@ -95,6 +95,23 @@ export class ClientsService {
     return client;
   }
 
+  async findOneClient(id: string): Promise<ClientResponseDto> {
+    if (id == '' || id == null) {
+      throw new BadRequestException('Invalid client ID');
+    }
+
+    const client = await this.clientRepository.findOne({
+      where: { id },
+      relations: ['address'],
+    });
+
+    if (!client) {
+      throw new BadRequestException('Client not found');
+    }
+
+    return mapperClientToDto(client);
+  }
+
   // async update(id: string, updateClientDto: UpdateClientDto) {
 
   // }
