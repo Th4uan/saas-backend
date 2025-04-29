@@ -24,6 +24,7 @@ import { EncryptionModule } from 'src/common/utils/encryption/encryption.module'
 import { ServicesModule } from 'src/services/services.module';
 import { AppointmentModule } from 'src/appointment/appointment.module';
 import { PaymentModule } from 'src/payment/payment.module';
+import { AgreementModule } from 'src/agreement/agreement.module';
 
 @Module({
   imports: [
@@ -86,6 +87,7 @@ import { PaymentModule } from 'src/payment/payment.module';
     ServicesModule,
     AppointmentModule,
     PaymentModule,
+    AgreementModule,
   ],
   controllers: [AppController],
   providers: [

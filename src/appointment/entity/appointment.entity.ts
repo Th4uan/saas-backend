@@ -1,7 +1,10 @@
+import { Agreement } from 'src/agreement/entity/agreement.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,8 +20,9 @@ export class Appointment {
   @Column()
   nomes: string[];
 
-  @Column()
-  tipo: string;
+  @ManyToOne(() => Agreement, (agreement) => agreement.appointments)
+  @JoinColumn({ name: 'agreementId' })
+  agreement: Agreement;
 
   @CreateDateColumn()
   createdAt: Date;

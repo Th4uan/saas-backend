@@ -8,6 +8,7 @@ import { AddressService } from 'src/address/address.service';
 import { EncryptionService } from 'src/common/utils/encryption/encryption.service';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { ClientResponseDto } from './dto/client-response.dto';
+import { mapperClientToDto } from './mapper/clients.mapper';
 
 @Injectable()
 export class ClientsService {
@@ -44,29 +45,8 @@ export class ClientsService {
 
     await this.clientRepository.save(client);
 
-    const data: ClientResponseDto = {
-      id: client.id,
-      fullName: client.fullName,
-      cpf: this.encryptionService.decrypt(client.cpf),
-      phone: client.phone,
-      phoneIsWhatsApp: client.phoneIsWhatsApp,
-      profission: client.profission,
-      civilStatus: client.civilStatus,
-      rg: client.rg,
-      birthDate: client.birthDate,
-      escolarity: client.escolarity,
-      nacionality: client.nacionality,
-      address: {
-        id: client.address.id,
-        street: client.address.street,
-        number: client.address.number || '',
-        complement: client.address.complement,
-        neighborhood: client.address.neighborhood,
-        city: client.address.city,
-        state: client.address.state,
-        zipCode: client.address.zipCode,
-      },
-    };
+    const data: ClientResponseDto = mapperClientToDto(client);
+
     return data;
   }
 
@@ -93,68 +73,9 @@ export class ClientsService {
       throw new BadRequestException('No clients found');
     }
 
-    return clients.map((client) => ({
-      id: client.id,
-      fullName: client.fullName,
-      cpf: this.encryptionService.decrypt(client.cpf),
-      phone: client.phone,
-      phoneIsWhatsApp: client.phoneIsWhatsApp,
-      profission: client.profission,
-      civilStatus: client.civilStatus,
-      rg: client.rg,
-      birthDate: client.birthDate,
-      escolarity: client.escolarity,
-      nacionality: client.nacionality,
-      address: {
-        id: client.address.id,
-        street: client.address.street,
-        number: client.address.number || '',
-        complement: client.address.complement,
-        neighborhood: client.address.neighborhood,
-        city: client.address.city,
-        state: client.address.state,
-        zipCode: client.address.zipCode,
-      },
-    }));
-  }
-
-  async findOneClient(id: string): Promise<ClientResponseDto> {
-    if (id == '' || id == null) {
-      throw new BadRequestException('Invalid client ID');
-    }
-
-    const client = await this.clientRepository.findOne({
-      where: { id },
-      relations: ['address'],
-    });
-
-    if (!client) {
-      throw new BadRequestException('Client not found');
-    }
-
-    const clientData: ClientResponseDto = {
-      id: client.id,
-      fullName: client.fullName,
-      cpf: this.encryptionService.decrypt(client.cpf),
-      phone: client.phone,
-      phoneIsWhatsApp: client.phoneIsWhatsApp,
-      profission: client.profission,
-      civilStatus: client.civilStatus,
-      rg: client.rg,
-      birthDate: client.birthDate,
-      escolarity: client.escolarity,
-      nacionality: client.nacionality,
-      address: {
-        id: client.address.id,
-        street: client.address.street,
-        number: client.address.number || '',
-        complement: client.address.complement,
-        neighborhood: client.address.neighborhood,
-        city: client.address.city,
-        state: client.address.state,
-        zipCode: client.address.zipCode,
-      },
-    };
+    const clientData: ClientResponseDto[] = clients.map((client) =>
+      mapperClientToDto(client),
+    );
     return clientData;
   }
   async findOneClientEntity(id: string): Promise<Client> {
