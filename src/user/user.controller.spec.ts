@@ -15,8 +15,7 @@ describe('UserController', () => {
   let controller: UserController;
 
   const mockUserService = {
-    createMember: jest.fn(),
-    createAdmin: jest.fn(),
+    createUser: jest.fn(),
     findUserById: jest.fn(),
   };
 
@@ -63,12 +62,13 @@ describe('UserController', () => {
   });
 
   describe('registerUser', () => {
-    it('should create a new user successfully', async () => {
+    it('should create a new attendant user successfully', async () => {
       const createUserDto: CreateUserDto = {
         username: 'testuser',
         fullName: 'Test User',
         email: 'test@example.com',
         password: 'password123',
+        role: UserRoleEnum.Attendant,
       };
 
       const expectedUser = {
@@ -79,20 +79,20 @@ describe('UserController', () => {
         role: UserRoleEnum.Attendant,
       } as User;
 
-      mockUserService.createMember.mockResolvedValue(expectedUser);
+      mockUserService.createUser.mockResolvedValue(expectedUser);
 
       const result = await controller.registerUser(createUserDto);
 
-      expect(mockUserService.createMember).toHaveBeenCalledWith(createUserDto);
+      expect(mockUserService.createUser).toHaveBeenCalledWith(createUserDto);
       expect(result).toEqual(expectedUser);
     });
 
     it('should throw an exception when createUserDto is invalid', async () => {
       const invalidUserDto = {} as CreateUserDto;
 
-      mockUserService.createMember.mockImplementation(() => {
+      mockUserService.createUser.mockImplementation(() => {
         throw new Error(
-          'UserService.createMember should not be called with invalid DTO',
+          'UserService.createUser should not be called with invalid DTO',
         );
       });
 
@@ -105,7 +105,7 @@ describe('UserController', () => {
       await expect(controller.registerUser(invalidUserDto)).rejects.toThrow(
         new HttpException('Invalid Data', HttpStatus.BAD_REQUEST),
       );
-      expect(mockUserService.createMember).not.toHaveBeenCalled();
+      expect(mockUserService.createUser).not.toHaveBeenCalled();
     });
 
     it('should propagate service exceptions', async () => {
@@ -114,9 +114,10 @@ describe('UserController', () => {
         fullName: 'Test User',
         email: 'test@example.com',
         password: 'password123',
+        role: UserRoleEnum.Attendant,
       };
 
-      mockUserService.createMember.mockRejectedValue(
+      mockUserService.createUser.mockRejectedValue(
         new HttpException('Service error', HttpStatus.INTERNAL_SERVER_ERROR),
       );
 
@@ -127,12 +128,13 @@ describe('UserController', () => {
   });
 
   describe('createAdmin', () => {
-    it('should create a new admin successfully', async () => {
+    it('should create a new admin user successfully', async () => {
       const createUserDto: CreateUserDto = {
         username: 'adminuser',
         fullName: 'Admin User',
         email: 'admin@example.com',
         password: 'password123',
+        role: UserRoleEnum.Admin,
       };
 
       const expectedUser = {
@@ -143,33 +145,36 @@ describe('UserController', () => {
         role: UserRoleEnum.Admin,
       } as User;
 
-      mockUserService.createAdmin.mockResolvedValue(expectedUser);
+      mockUserService.createUser.mockResolvedValue(expectedUser);
 
-      const result = await controller.createAdmin(createUserDto);
+      const result = await controller.createUser(createUserDto);
 
-      expect(mockUserService.createAdmin).toHaveBeenCalledWith(createUserDto);
+      expect(mockUserService.createUser).toHaveBeenCalledWith({
+        ...createUserDto,
+        role: UserRoleEnum.Admin,
+      });
       expect(result).toEqual(expectedUser);
     });
 
     it('should throw an exception when createUserDto is invalid', async () => {
       const invalidUserDto = {} as CreateUserDto;
 
-      mockUserService.createAdmin.mockImplementation(() => {
+      mockUserService.createUser.mockImplementation(() => {
         throw new Error(
-          'UserService.createAdmin should not be called with invalid DTO',
+          'UserService.createUser should not be called with invalid DTO',
         );
       });
 
-      jest.spyOn(controller, 'createAdmin').mockImplementation(() => {
+      jest.spyOn(controller, 'createUser').mockImplementation(() => {
         return Promise.reject(
           new HttpException('Invalid Data', HttpStatus.BAD_REQUEST),
         );
       });
 
-      await expect(controller.createAdmin(invalidUserDto)).rejects.toThrow(
+      await expect(controller.createUser(invalidUserDto)).rejects.toThrow(
         new HttpException('Invalid Data', HttpStatus.BAD_REQUEST),
       );
-      expect(mockUserService.createAdmin).not.toHaveBeenCalled();
+      expect(mockUserService.createUser).not.toHaveBeenCalled();
     });
 
     it('should throw an exception when user service returns null', async () => {
@@ -178,11 +183,12 @@ describe('UserController', () => {
         fullName: 'Admin User',
         email: 'admin@example.com',
         password: 'password123',
+        role: UserRoleEnum.Admin,
       };
 
-      mockUserService.createAdmin.mockResolvedValue(null);
+      mockUserService.createUser.mockResolvedValue(null);
 
-      await expect(controller.createAdmin(createUserDto)).rejects.toThrow(
+      await expect(controller.createUser(createUserDto)).rejects.toThrow(
         new HttpException('Invalid Data', HttpStatus.BAD_REQUEST),
       );
     });

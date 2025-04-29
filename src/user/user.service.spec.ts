@@ -4,6 +4,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { HttpException } from '@nestjs/common';
 import { HashingService } from 'src/auth/hashing/hashing.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UserRoleEnum } from './enums/user-role.enum';
 
 describe('UserService', () => {
   let service: UserService;
@@ -41,25 +43,25 @@ describe('UserService', () => {
     jest.clearAllMocks();
   });
 
-  describe('createMember', () => {
-    it('should create and return a member when valid data is provided', async () => {
+  describe('createUser', () => {
+    it('should create and return an attendant user when valid data is provided', async () => {
       // Arrange
-      const createUserDto = {
+      const createUserDto: CreateUserDto = {
         username: 'testuser',
         fullName: 'Test User',
         email: 'test@example.com',
         password: 'plainpassword',
+        role: UserRoleEnum.Attendant,
       };
 
       const hashedPassword = 'hashedpassword';
       hashingService.hash.mockResolvedValue(hashedPassword);
 
-      // The userData as defined in the service:
       const userData = {
         username: createUserDto.username,
         fullName: createUserDto.fullName,
         email: createUserDto.email,
-        role: 'attendant', // Simulando UserRoleEnum.Attendant
+        role: createUserDto.role,
         password: hashedPassword,
       };
 
@@ -68,7 +70,42 @@ describe('UserService', () => {
       userRepository.save.mockResolvedValue(createdUser);
 
       // Act
-      const result = await service.createMember(createUserDto);
+      const result = await service.createUser(createUserDto);
+
+      // Assert
+      expect(hashingService.hash).toHaveBeenCalledWith(createUserDto.password);
+      expect(userRepository.create).toHaveBeenCalledWith(userData);
+      expect(userRepository.save).toHaveBeenCalledWith(createdUser);
+      expect(result).toEqual(createdUser);
+    });
+
+    it('should create and return an admin user when valid data is provided', async () => {
+      // Arrange
+      const createUserDto: CreateUserDto = {
+        username: 'adminuser',
+        fullName: 'Admin User',
+        email: 'admin@example.com',
+        password: 'plainpassword',
+        role: UserRoleEnum.Admin,
+      };
+
+      const hashedPassword = 'hashedpassword';
+      hashingService.hash.mockResolvedValue(hashedPassword);
+
+      const userData = {
+        username: createUserDto.username,
+        fullName: createUserDto.fullName,
+        email: createUserDto.email,
+        role: createUserDto.role,
+        password: hashedPassword,
+      };
+
+      const createdUser = { id: '1', ...userData } as User;
+      userRepository.create.mockReturnValue(createdUser);
+      userRepository.save.mockResolvedValue(createdUser);
+
+      // Act
+      const result = await service.createUser(createUserDto);
 
       // Assert
       expect(hashingService.hash).toHaveBeenCalledWith(createUserDto.password);
@@ -79,11 +116,12 @@ describe('UserService', () => {
 
     it('should throw an exception if user creation fails', async () => {
       // Arrange
-      const createUserDto = {
+      const createUserDto: CreateUserDto = {
         username: 'testuser',
         fullName: 'Test User',
         email: 'test@example.com',
         password: 'plainpassword',
+        role: UserRoleEnum.Attendant,
       };
 
       const hashedPassword = 'hashedpassword';
@@ -93,7 +131,7 @@ describe('UserService', () => {
       userRepository.create.mockReturnValue(undefined);
 
       // Act & Assert
-      await expect(service.createMember(createUserDto)).rejects.toThrow(
+      await expect(service.createUser(createUserDto)).rejects.toThrow(
         HttpException,
       );
     });
@@ -112,6 +150,16 @@ describe('UserService', () => {
       // Assert
       expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: userId });
       expect(result).toEqual(user);
+    });
+
+    it('should throw an exception if user is not found', async () => {
+      // Arrange
+      const userId = '999';
+      userRepository.findOneBy.mockResolvedValue(null);
+
+      // Act & Assert
+      await expect(service.findUserById(userId)).rejects.toThrow(HttpException);
+      expect(userRepository.findOneBy).toHaveBeenCalledWith({ id: userId });
     });
   });
 });

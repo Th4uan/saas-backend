@@ -1,5 +1,12 @@
-import { IsDate, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsObject,
+  IsString,
+} from 'class-validator';
 import { ServiceStatusEnum } from '../enum/service-status.enum';
+import { PaymentDto } from 'src/payment/dto/payment.dto';
 
 export class CreateServiceDto {
   @IsNotEmpty()
@@ -15,12 +22,12 @@ export class CreateServiceDto {
   date: Date;
 
   @IsNotEmpty()
-  @IsString()
-  time: string;
-
-  @IsNotEmpty()
   @IsEnum(ServiceStatusEnum)
   status: ServiceStatusEnum;
+
+  @IsNotEmpty()
+  @IsObject()
+  payment: PaymentDto;
 
   @IsNotEmpty()
   @IsString()

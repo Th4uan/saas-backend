@@ -12,6 +12,7 @@ import { ServiceStatusEnum } from '../enum/service-status.enum';
 import { Client } from 'src/clients/entities/client.entity';
 import { User } from 'src/user/entities/user.entity';
 import { FilesEntity } from 'src/supabase/entities/files.entity';
+import { Payment } from 'src/payment/entity/payment.entity';
 
 @Entity('services')
 export class Service {
@@ -29,14 +30,15 @@ export class Service {
   @Column()
   date: Date;
 
-  @Column()
-  time: string;
-
   @Column({ enum: ServiceStatusEnum })
   status: ServiceStatusEnum;
 
   @Column()
   typeService: string;
+
+  @ManyToOne(() => Payment, (payment) => payment.service)
+  @JoinColumn({ name: 'payment_id' })
+  payments: Payment;
 
   @OneToMany(() => FilesEntity, (file) => file.service)
   files: FilesEntity[];

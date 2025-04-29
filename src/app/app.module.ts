@@ -22,6 +22,8 @@ import { ClientsModule } from 'src/clients/clients.module';
 import { SupabaseModule } from 'src/supabase/supabase.module';
 import { EncryptionModule } from 'src/common/utils/encryption/encryption.module';
 import { ServicesModule } from 'src/services/services.module';
+import { AppointmentModule } from 'src/appointment/appointment.module';
+import { PaymentModule } from 'src/payment/payment.module';
 
 @Module({
   imports: [
@@ -82,6 +84,8 @@ import { ServicesModule } from 'src/services/services.module';
     SupabaseModule,
     EncryptionModule,
     ServicesModule,
+    AppointmentModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [

@@ -13,6 +13,8 @@ import { UserService } from 'src/user/user.service';
 import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { ResponseServiceDto } from './dto/response-service.dto';
+import { mapServiceToDto } from './mapper/service.mapper';
+import { PaymentService } from 'src/payment/payment.service';
 
 @Injectable()
 export class ServicesService {
@@ -21,6 +23,7 @@ export class ServicesService {
     private readonly serviceRepository: Repository<Service>,
     private readonly clientsService: ClientsService,
     private readonly userService: UserService,
+    private readonly paymentService: PaymentService,
   ) {}
   async create(createServiceDto: CreateServiceDto): Promise<Service> {
     if (!createServiceDto) {
@@ -55,11 +58,23 @@ export class ServicesService {
       throw new UnauthorizedException('User is not a doctor');
     }
 
+    const paymentData = {
+      formaPagamento: createServiceDto.payment.formaPagamento,
+      valor: createServiceDto.payment.valor,
+      status: createServiceDto.payment.status,
+    };
+
+    const payment = await this.paymentService.createPayment(paymentData);
+
+    if (!payment) {
+      throw new BadRequestException('Error creating payment');
+    }
+
     const data = {
       client: client,
       doctor: doctor,
+      payments: payment,
       date: createServiceDto.date,
-      time: createServiceDto.time,
       status: createServiceDto.status,
       typeService: createServiceDto.typeService,
     };
@@ -83,7 +98,7 @@ export class ServicesService {
     const services = await this.serviceRepository.find({
       take: limit,
       skip: skip,
-      relations: ['client', 'doctor'],
+      relations: ['client', 'doctor', 'payments'],
     });
 
     if (!services) {
@@ -91,24 +106,7 @@ export class ServicesService {
     }
 
     const data: ResponseServiceDto[] = services.map((service) => {
-      return {
-        id: service.id,
-        client: {
-          id: service.client.id,
-          fullName: service.client.fullName,
-          phone: service.client.phone,
-          phoneIsWhatsApp: service.client.phoneIsWhatsApp,
-        },
-        doctor: {
-          id: service.doctor.id,
-          fullName: service.doctor.fullName,
-          email: service.doctor.email,
-        },
-        date: service.date,
-        time: service.time,
-        status: service.status,
-        typeService: service.typeService,
-      };
+      return mapServiceToDto(service);
     });
 
     if (data.length <= 0) {
@@ -125,31 +123,18 @@ export class ServicesService {
 
     const service = await this.serviceRepository.findOne({
       where: { id },
-      relations: ['client', 'doctor'],
+      relations: ['client', 'doctor', 'payments'],
     });
 
     if (!service) {
       throw new NotFoundException('Service not found');
     }
 
-    const data: ResponseServiceDto = {
-      id: service.id,
-      client: {
-        id: service.client.id,
-        fullName: service.client.fullName,
-        phone: service.client.phone,
-        phoneIsWhatsApp: service.client.phoneIsWhatsApp,
-      },
-      doctor: {
-        id: service.doctor.id,
-        fullName: service.doctor.fullName,
-        email: service.doctor.email,
-      },
-      date: service.date,
-      time: service.time,
-      status: service.status,
-      typeService: service.typeService,
-    };
+    const data: ResponseServiceDto = mapServiceToDto(service);
+
+    if (!data) {
+      throw new NotFoundException('Service not found');
+    }
 
     return data;
   }
@@ -161,7 +146,7 @@ export class ServicesService {
 
     const service = await this.serviceRepository.findOne({
       where: { id },
-      relations: ['client', 'doctor'],
+      relations: ['client', 'doctor', 'payments'],
     });
 
     if (!service) {
@@ -182,7 +167,7 @@ export class ServicesService {
       where: {
         date: Between(startOfDay, endOfDay),
       },
-      relations: ['client', 'doctor'],
+      relations: ['client', 'doctor', 'payments'],
     });
 
     if (!services) {
@@ -190,24 +175,7 @@ export class ServicesService {
     }
 
     const data: ResponseServiceDto[] = services.map((service) => {
-      return {
-        id: service.id,
-        client: {
-          id: service.client.id,
-          fullName: service.client.fullName,
-          phone: service.client.phone,
-          phoneIsWhatsApp: service.client.phoneIsWhatsApp,
-        },
-        doctor: {
-          id: service.doctor.id,
-          fullName: service.doctor.fullName,
-          email: service.doctor.email,
-        },
-        date: service.date,
-        time: service.time,
-        status: service.status,
-        typeService: service.typeService,
-      };
+      return mapServiceToDto(service);
     });
 
     if (data.length <= 0) {

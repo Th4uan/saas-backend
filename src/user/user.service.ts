@@ -20,13 +20,13 @@ export class UserService {
     private readonly hashingService: HashingService,
   ) {}
 
-  async createAdmin(createUserDto: CreateUserDto) {
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
     const pass = await this.hashingService.hash(createUserDto.password);
     const userData = {
       username: createUserDto.username,
       fullName: createUserDto.fullName,
       email: createUserDto.email,
-      role: UserRoleEnum.Admin,
+      role: createUserDto.role,
       password: pass,
     };
 
@@ -35,49 +35,6 @@ export class UserService {
     if (!user) {
       throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
     }
-    await this.userRepository.save(user);
-
-    return user;
-  }
-
-  async createDoctor(createUserDto: CreateUserDto) {
-    const hashPass = await this.hashingService.hash(createUserDto.password);
-    const userData = {
-      username: createUserDto.username,
-      fullName: createUserDto.fullName,
-      email: createUserDto.email,
-      role: UserRoleEnum.Attendant,
-      password: hashPass,
-    };
-
-    const user: User = this.userRepository.create(userData);
-
-    if (!user) {
-      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
-    }
-
-    await this.userRepository.save(user);
-
-    return user;
-  }
-
-  async createMember(createUserDto: CreateUserDto) {
-    const hashPass = await this.hashingService.hash(createUserDto.password);
-
-    const userData = {
-      username: createUserDto.username,
-      fullName: createUserDto.fullName,
-      email: createUserDto.email,
-      role: UserRoleEnum.Attendant,
-      password: hashPass,
-    };
-
-    const user: User = this.userRepository.create(userData);
-
-    if (!user) {
-      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
-    }
-
     await this.userRepository.save(user);
 
     return user;
@@ -133,7 +90,14 @@ export class UserService {
   //   return `This action updates a #${id} user`;
   // }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
+  async deleteUser(id: string) {
+    const user = await this.findUserById(id);
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    const deletedUser = await this.userRepository.delete(id);
+
+    return deletedUser;
+  }
 }

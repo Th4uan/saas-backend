@@ -1,10 +1,12 @@
+import { ServiceStatusEnum } from '../enum/service-status.enum';
+
 export class ResponseServiceDto {
   id: string;
   client: Client;
   doctor: Doctor;
+  payment: Payment;
   date: Date;
-  time: string;
-  status: string; // ServiceStatusEnum
+  status: ServiceStatusEnum;
   typeService: string;
 }
 
@@ -19,4 +21,11 @@ class Client {
   fullName: string;
   phone: string;
   phoneIsWhatsApp: boolean;
+}
+
+class Payment {
+  id: string;
+  formaPagamento: string;
+  valor: number;
+  status: string;
 }

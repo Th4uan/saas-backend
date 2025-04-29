@@ -8,6 +8,7 @@ import {
   Param,
   UseGuards,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -43,7 +44,9 @@ export class UserController {
     if (!createUserDto) {
       throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
     }
-    const user = await this.userService.createMember(createUserDto);
+
+    createUserDto.role = UserRoleEnum.Attendant;
+    const user = await this.userService.createUser(createUserDto);
 
     return user;
   }
@@ -54,33 +57,12 @@ export class UserController {
   @ApiCookieAuth('jwt')
   @Roles(UserRoleEnum.Admin)
   @Post('admin')
-  async createAdmin(@Body() createUserDto: CreateUserDto) {
+  async createUser(@Body() createUserDto: CreateUserDto) {
     if (!createUserDto) {
       throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
     }
 
-    const user = await this.userService.createAdmin(createUserDto);
-
-    if (!user) {
-      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
-    }
-
-    return user;
-  }
-
-  @ApiResponse({ status: 201, description: 'Doctor created successfully' })
-  @ApiResponse({ status: 400, description: 'Invalid Data' })
-  @ApiResponse({ status: 403, description: 'Forbidden' })
-  @ApiBody({ type: CreateUserDto })
-  @ApiCookieAuth('jwt')
-  @Roles(UserRoleEnum.Admin, UserRoleEnum.Doctor)
-  @Post('doctor')
-  async createDoctor(@Body() createUserDto: CreateUserDto) {
-    if (!createUserDto) {
-      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
-    }
-
-    const user = await this.userService.createDoctor(createUserDto);
+    const user = await this.userService.createUser(createUserDto);
 
     if (!user) {
       throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
@@ -143,8 +125,19 @@ export class UserController {
   //   return this.userService.update(+id, updateUserDto);
   // }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.userService.remove(+id);
-  // }
+  @ApiResponse({ status: 200, description: 'User deleted successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid Id' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'User ID',
+    type: String,
+  })
+  @ApiCookieAuth('jwt')
+  @Roles(UserRoleEnum.Admin)
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    return this.userService.deleteUser(id);
+  }
 }
