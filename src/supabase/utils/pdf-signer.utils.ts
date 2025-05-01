@@ -1,13 +1,13 @@
-import forge from 'node-forge';
+import * as forge from 'node-forge';
 import { plainAddPlaceholder } from 'node-signpdf';
-import { PDFDocument } from 'pdf-lib';
+// import { PDFDocument } from 'pdf-lib';
 import signer from 'node-signpdf';
 
-export async function signPdf(
+export function signPdf(
   pdfBuffer: Buffer,
   pfxBuffer: Buffer,
   password: string,
-): Promise<Buffer> {
+) {
   const binaryBuffer = forge.util.createBuffer(pfxBuffer.toString('binary'));
 
   const p12Asn1 = forge.asn1.fromDer(binaryBuffer, false);
@@ -29,21 +29,16 @@ export async function signPdf(
     throw new Error('No key or certificate found in PFX file');
   }
 
-  const privateKeyPem = forge.pki.privateKeyToPem(keyObj.key);
-  const certificatePem = forge.pki.certificateToPem(certObj.cert);
-
-  const pdfDoc = await PDFDocument.load(pdfBuffer);
-  const pdfBytes = await pdfDoc.save();
+  // const privateKeyPem = forge.pki.privateKeyToPem(keyObj.key);
+  // const certificatePem = forge.pki.certificateToPem(certObj.cert);
 
   const pdfBytesWithPlaceholder = plainAddPlaceholder({
-    pdfBuffer: pdfBytes,
+    pdfBuffer: pdfBuffer,
     reason: 'Document verification',
     signatureLength: 8192,
   });
 
-  const signedPdf = signer.sign(pdfBytesWithPlaceholder, {
-    key: privateKeyPem,
-    cert: certificatePem,
+  const signedPdf = signer.sign(pdfBytesWithPlaceholder, pfxBuffer, {
     passphrase: password,
   });
 

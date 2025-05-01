@@ -109,7 +109,7 @@ export class SupabaseService {
       throw new BadRequestException('No password provided');
     }
 
-    const signedPdf = await signPdf(file.buffer, pfxBuffer.buffer, password);
+    const signedPdf = signPdf(file.buffer, pfxBuffer.buffer, password);
 
     if (!signedPdf) {
       throw new BadRequestException('Error signing PDF');

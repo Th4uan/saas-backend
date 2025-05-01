@@ -8,19 +8,15 @@ import {
   Post,
   UploadedFile,
   UploadedFiles,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { SupabaseService } from './supabase.service';
 import { PasswordDto } from './dto/password.dto';
-import { ApiCookieAuth, ApiTags } from '@nestjs/swagger';
-import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 import { FileDto } from './dto/file.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('documents')
-@UseGuards(AuthTokenGuard)
-@ApiCookieAuth('jwt')
 @Controller('documents')
 export class SupabaseController {
   constructor(private readonly supabaseService: SupabaseService) {}
