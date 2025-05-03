@@ -13,6 +13,8 @@ import { Client } from 'src/clients/entities/client.entity';
 import { User } from 'src/user/entities/user.entity';
 import { FilesEntity } from 'src/supabase/entities/files.entity';
 import { Payment } from 'src/payment/entity/payment.entity';
+import { TypeService } from '../enum/type-service..enum';
+import { RecurrenceEnum } from '../enum/recurrence.enum';
 
 @Entity('services')
 export class Service {
@@ -34,10 +36,10 @@ export class Service {
   status: ServiceStatusEnum;
 
   @Column()
-  typeService: string; // -> trocar para enum
+  typeService: TypeService; // -> trocar para enum
 
   @Column()
-  recurrence: string;
+  recurrence: RecurrenceEnum;
 
   @ManyToOne(() => Payment, (payment) => payment.service)
   @JoinColumn({ name: 'payment_id' })

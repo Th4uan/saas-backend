@@ -1,0 +1,8 @@
+export enum RecurrenceEnum {
+  SEMANAL = 'SEMANAL',
+  QUINZENAL = 'QUINZENAL',
+  MENSAL = 'MENSAL',
+  BIMESTRAL = 'BIMESTRAL',
+  TRIMESTRAL = 'TRIMESTRAL',
+  UMA = 'UMA',
+}

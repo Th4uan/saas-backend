@@ -7,6 +7,8 @@ import {
 } from 'class-validator';
 import { ServiceStatusEnum } from '../enum/service-status.enum';
 import { PaymentDto } from 'src/payment/dto/payment.dto';
+import { TypeService } from '../enum/type-service..enum';
+import { RecurrenceEnum } from '../enum/recurrence.enum';
 
 export class CreateServiceDto {
   @IsNotEmpty()
@@ -30,6 +32,10 @@ export class CreateServiceDto {
   payment: PaymentDto;
 
   @IsNotEmpty()
-  @IsString()
-  typeService: string;
+  @IsEnum(TypeService)
+  typeService: TypeService;
+
+  @IsNotEmpty()
+  @IsEnum(RecurrenceEnum)
+  recurrence: RecurrenceEnum;
 }

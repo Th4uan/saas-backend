@@ -77,6 +77,7 @@ export class ServicesService {
       date: createServiceDto.date,
       status: createServiceDto.status,
       typeService: createServiceDto.typeService,
+      recurrence: createServiceDto.recurrence,
     };
 
     const service = this.serviceRepository.create(data);
