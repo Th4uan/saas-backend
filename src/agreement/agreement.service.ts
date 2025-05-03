@@ -19,4 +19,35 @@ export class AgreementService {
 
     return agreement;
   }
+
+  async getAgreementById(id: string): Promise<Agreement> {
+    if (id == null || id === '') {
+      throw new BadRequestException('Agreement ID is required');
+    }
+    const agreement = await this.agreementRepository.findOne({
+      where: { id },
+    });
+
+    if (!agreement) {
+      throw new BadRequestException('Agreement not found');
+    }
+
+    return agreement;
+  }
+
+  async deleteAgreement(id: string): Promise<void> {
+    if (id == null || id === '') {
+      throw new BadRequestException('Agreement ID is required');
+    }
+
+    const agreement = await this.agreementRepository.findOne({
+      where: { id },
+    });
+
+    if (!agreement) {
+      throw new BadRequestException('Agreement not found');
+    }
+
+    await this.agreementRepository.remove(agreement);
+  }
 }

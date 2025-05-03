@@ -34,7 +34,10 @@ export class Service {
   status: ServiceStatusEnum;
 
   @Column()
-  typeService: string;
+  typeService: string; // -> trocar para enum
+
+  @Column()
+  recurrence: string;
 
   @ManyToOne(() => Payment, (payment) => payment.service)
   @JoinColumn({ name: 'payment_id' })

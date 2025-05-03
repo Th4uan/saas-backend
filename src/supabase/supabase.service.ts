@@ -11,6 +11,7 @@ import { FilesEntity } from './entities/files.entity';
 import { Repository } from 'typeorm';
 import { ClientsService } from 'src/clients/clients.service';
 import { ServicesService } from 'src/services/services.service';
+import { CertificateService } from 'src/certificate/certificate.service';
 
 @Injectable()
 export class SupabaseService {
@@ -22,6 +23,7 @@ export class SupabaseService {
     private readonly filesRepository: Repository<FilesEntity>,
     private readonly clientService: ClientsService,
     private readonly servicesService: ServicesService,
+    private readonly certificateService: CertificateService,
   ) {
     this.supabase = new SupabaseClient(
       process.env.SUPABASE_URL!,
@@ -93,23 +95,27 @@ export class SupabaseService {
 
   async signUpload(
     file: Express.Multer.File,
-    pfxBuffer: Express.Multer.File,
-    password: string,
+    pfxBufferId: string,
     fileDto: FileDto,
   ) {
     if (!file) {
       throw new BadRequestException('No file provided');
     }
 
+    const pfxBuffer =
+      await this.certificateService.getCertificateById(pfxBufferId);
+
     if (!pfxBuffer) {
       throw new BadRequestException('No PFX file provided');
     }
 
-    if (password == '' || password == null || !password) {
+    const password = pfxBuffer.password;
+
+    if (!password) {
       throw new BadRequestException('No password provided');
     }
 
-    const signedPdf = signPdf(file.buffer, pfxBuffer.buffer, password);
+    const signedPdf = signPdf(file.buffer, pfxBuffer.certificate, password);
 
     if (!signedPdf) {
       throw new BadRequestException('Error signing PDF');

@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class PasswordDto {
+export class FileExpecsDto {
   @IsString()
   @IsNotEmpty()
   clientId: string;
@@ -11,5 +11,5 @@ export class PasswordDto {
 
   @IsString()
   @IsNotEmpty()
-  password: string;
+  certificateId: string;
 }

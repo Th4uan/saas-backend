@@ -25,6 +25,7 @@ import { ServicesModule } from 'src/services/services.module';
 import { AppointmentModule } from 'src/appointment/appointment.module';
 import { PaymentModule } from 'src/payment/payment.module';
 import { AgreementModule } from 'src/agreement/agreement.module';
+import { CertificateModule } from 'src/certificate/certificate.module';
 
 @Module({
   imports: [
@@ -88,6 +89,7 @@ import { AgreementModule } from 'src/agreement/agreement.module';
     AppointmentModule,
     PaymentModule,
     AgreementModule,
+    CertificateModule,
   ],
   controllers: [AppController],
   providers: [

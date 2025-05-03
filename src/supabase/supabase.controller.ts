@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { SupabaseService } from './supabase.service';
-import { PasswordDto } from './dto/password.dto';
+import { FileExpecsDto } from './dto/file-expecs.dto';
 import { FileDto } from './dto/file.dto';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -53,15 +53,13 @@ export class SupabaseController {
   }
 
   @Post('sign/upload')
-  @UseInterceptors(FilesInterceptor('files', 2))
+  @UseInterceptors(FilesInterceptor('file'))
   async signUpload(
-    @UploadedFiles() files: Express.Multer.File[],
-    @Body() password: PasswordDto,
+    @UploadedFiles() file: Express.Multer.File,
+    @Body() password: FileExpecsDto,
   ) {
-    if (files.length !== 2) {
-      throw new BadRequestException(
-        'Please upload exactly two files: the PDF and the PFX file',
-      );
+    if (!file) {
+      throw new BadRequestException('Invalid file');
     }
 
     const fileExpecs: FileDto = {
@@ -69,16 +67,9 @@ export class SupabaseController {
       serviceId: password.serviceId,
     };
 
-    const [pdfFile, pfxFile] = files;
-
-    if (!pdfFile || !pfxFile) {
-      throw new BadRequestException('Invalid files');
-    }
-
     const signedPdf = await this.supabaseService.signUpload(
-      pdfFile,
-      pfxFile,
-      password.password,
+      file,
+      password.certificateId,
       fileExpecs,
     );
 

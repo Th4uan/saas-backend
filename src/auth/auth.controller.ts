@@ -119,7 +119,19 @@ export class AuthController {
     @RefreshTokenParam() refreshTokenDto: RefreshTokenDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const token = await this.authService.refreshToken(refreshTokenDto);
+    const [token, newRefresh] =
+      await this.authService.refreshToken(refreshTokenDto);
+    res.clearCookie('refresh_token', {
+      httpOnly: this.cookie.httpOnly,
+      secure: this.cookie.secure,
+      sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
+    });
+    res.cookie('refresh_token', newRefresh, {
+      httpOnly: this.cookie.httpOnly,
+      secure: this.cookie.secure,
+      sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
+      maxAge: this.cookie.maxAgeRefresh * 1000,
+    });
     res.cookie('jwt', token, {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,

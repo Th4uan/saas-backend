@@ -59,7 +59,7 @@ export class AuthService {
     return { tokens, user };
   }
 
-  async refreshToken(refreshToken: RefreshTokenDto): Promise<string> {
+  async refreshToken(refreshToken: RefreshTokenDto) {
     const invalidToken = 'Invalid or ExpiredRefresh Token';
     try {
       const sub: Jwt = await this.jwtService.verifyAsync(
@@ -90,7 +90,20 @@ export class AuthService {
         throw new Error(invalidToken);
       }
 
-      return this.signJwtAsync(user);
+      const newRefreshToken = await this.generateRefreshToken(user);
+
+      const hashedRefreshToken =
+        await this.hashingService.hash(newRefreshToken);
+
+      await this.cacheManager.del(`refresh_token:${user.id}`);
+
+      await this.cacheManager.set(
+        `refresh_token:${user.id}`,
+        hashedRefreshToken,
+        this.config.jwtTtlRefresh,
+      );
+
+      return [this.signJwtAsync(user), newRefreshToken];
     } catch {
       throw new UnauthorizedException(invalidToken);
     }

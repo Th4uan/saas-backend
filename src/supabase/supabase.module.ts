@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FilesEntity } from './entities/files.entity';
 import { ServicesModule } from 'src/services/services.module';
 import { ClientsModule } from 'src/clients/clients.module';
+import { CertificateModule } from 'src/certificate/certificate.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([FilesEntity]),
     ServicesModule,
     ClientsModule,
+    CertificateModule,
   ],
   providers: [SupabaseService],
   exports: [SupabaseService],

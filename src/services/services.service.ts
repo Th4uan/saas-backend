@@ -116,27 +116,21 @@ export class ServicesService {
     return data;
   }
 
-  async findOneService(id: string): Promise<ResponseServiceDto> {
+  async findOneService(id: string) {
     if (id == '' || id == null) {
       throw new BadRequestException('Service ID is required');
     }
 
     const service = await this.serviceRepository.findOne({
       where: { id },
-      relations: ['client', 'doctor', 'payments'],
+      relations: ['client', 'doctor', 'payments', 'files'],
     });
 
     if (!service) {
       throw new NotFoundException('Service not found');
     }
 
-    const data: ResponseServiceDto = mapServiceToDto(service);
-
-    if (!data) {
-      throw new NotFoundException('Service not found');
-    }
-
-    return data;
+    return service;
   }
 
   async findOneServiceEntity(id: string): Promise<Service> {
