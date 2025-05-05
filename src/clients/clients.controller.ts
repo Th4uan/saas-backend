@@ -7,7 +7,7 @@ import {
   Param,
   Delete,
   BadRequestException,
-  UseGuards,
+  // UseGuards,
   Query,
 } from '@nestjs/common';
 import { ClientsService } from './clients.service';
@@ -21,12 +21,12 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
+// import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 import { ClientResponseDto } from './dto/client-response.dto';
 
 @ApiTags('clients')
 @ApiCookieAuth('jwt')
-@UseGuards(AuthTokenGuard)
+// @UseGuards(AuthTokenGuard)
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
