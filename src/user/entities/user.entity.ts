@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { UserRoleEnum } from '../enums/user-role.enum';
 import { Service } from 'src/services/entities/service.entity';
+import { DisponibilityEnum } from '../enums/disponibility.enum';
 
 @Entity('users')
 export class User {
@@ -20,11 +21,14 @@ export class User {
   @Column()
   username: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ enum: UserRoleEnum })
   role: UserRoleEnum;
+
+  @Column({ enum: DisponibilityEnum, default: DisponibilityEnum.INDISPONIVEL })
+  disponibility: DisponibilityEnum;
 
   @Column()
   password: string;

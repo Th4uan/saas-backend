@@ -11,6 +11,7 @@ import { Repository } from 'typeorm';
 import { HashingService } from 'src/auth/hashing/hashing.service';
 import { UserRoleEnum } from './enums/user-role.enum';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { RequestDisponibilityDto } from './dto/request-disponibility.dto';
 
 @Injectable()
 export class UserService {
@@ -99,5 +100,19 @@ export class UserService {
     const deletedUser = await this.userRepository.delete(id);
 
     return deletedUser;
+  }
+
+  async changeDisponibility(id: string, request: RequestDisponibilityDto) {
+    const user = await this.findUserById(id);
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const updatedUser = await this.userRepository.update(id, {
+      disponibility: request.disponibility,
+    });
+
+    return updatedUser;
   }
 }

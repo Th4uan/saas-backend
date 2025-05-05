@@ -9,6 +9,8 @@ import {
   UseGuards,
   Query,
   Delete,
+  Put,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -26,6 +28,9 @@ import {
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { UserRoleEnum } from './enums/user-role.enum';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { RequestDisponibilityDto } from './dto/request-disponibility.dto';
+import { Request } from 'express';
+import { REQUEST_TOKEN_JWT_PAYLOAD } from 'src/auth/auth.constants';
 
 @ApiTags('User')
 @UseGuards(AuthTokenGuard)
@@ -139,5 +144,29 @@ export class UserController {
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.userService.deleteUser(id);
+  }
+
+  @Put()
+  async changeDisponibility(
+    @Body() request: RequestDisponibilityDto,
+    @Req() req: Request,
+  ) {
+    if (!request) {
+      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
+    }
+
+    const user = await this.userService.changeDisponibility(
+      (req[REQUEST_TOKEN_JWT_PAYLOAD] as { sub: string }).sub,
+      request,
+    );
+
+    if (!user) {
+      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
+    }
+
+    return {
+      message: 'Disponibility changed successfully',
+      user,
+    };
   }
 }
