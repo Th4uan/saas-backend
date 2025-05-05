@@ -15,6 +15,7 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { ResponseServiceDto } from './dto/response-service.dto';
 import { mapServiceToDto } from './mapper/service.mapper';
 import { PaymentService } from 'src/payment/payment.service';
+import { UpdateServiceDto } from './dto/update-service.dto';
 
 @Injectable()
 export class ServicesService {
@@ -178,5 +179,27 @@ export class ServicesService {
     }
 
     return data;
+  }
+  async updateServiceStatus(id: string, update: UpdateServiceDto) {
+    if (id == '' || id == null) {
+      throw new BadRequestException('Service ID is required');
+    }
+
+    const service = await this.serviceRepository.findOne({
+      where: { id },
+      relations: ['client', 'doctor', 'payments'],
+    });
+
+    if (!service) {
+      throw new NotFoundException('Service not found');
+    }
+
+    if (update.status) {
+      service.status = update.status;
+    }
+
+    await this.serviceRepository.save(service);
+
+    return service;
   }
 }

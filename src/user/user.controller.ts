@@ -9,8 +9,8 @@ import {
   UseGuards,
   Query,
   Delete,
-  Put,
   Req,
+  Patch,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -146,7 +146,7 @@ export class UserController {
     return this.userService.deleteUser(id);
   }
 
-  @Put()
+  @Patch()
   async changeDisponibility(
     @Body() request: RequestDisponibilityDto,
     @Req() req: Request,

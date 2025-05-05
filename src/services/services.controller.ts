@@ -8,6 +8,7 @@ import {
   BadRequestException,
   // UseGuards,
   HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
@@ -20,6 +21,7 @@ import {
   ApiQuery,
   ApiResponse,
 } from '@nestjs/swagger';
+import { UpdateServiceDto } from './dto/update-service.dto';
 
 @ApiCookieAuth('jwt')
 // @UseGuards(AuthTokenGuard)
@@ -143,5 +145,24 @@ export class ServicesController {
   @Get('day')
   async findAllServicesByDay() {
     return this.servicesService.findAllServiceByDay();
+  }
+
+  @Patch(':id')
+  async updateService(
+    @Param('id') id: string,
+    @Body() updateServiceDto: UpdateServiceDto,
+  ) {
+    if (id == '' || id == null) {
+      throw new BadRequestException('Service ID is required');
+    }
+    const data = await this.servicesService.updateServiceStatus(
+      id,
+      updateServiceDto,
+    );
+
+    return {
+      message: 'Service updated successfully',
+      data,
+    };
   }
 }

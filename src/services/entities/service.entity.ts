@@ -32,7 +32,7 @@ export class Service {
   @Column()
   date: Date;
 
-  @Column({ enum: ServiceStatusEnum })
+  @Column({ enum: ServiceStatusEnum, default: ServiceStatusEnum.EM_FILA })
   status: ServiceStatusEnum;
 
   @Column()
