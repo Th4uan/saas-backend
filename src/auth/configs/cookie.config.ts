@@ -9,5 +9,6 @@ export default registerAs('cookie', () => {
     sameSite: process.env.COOKIE_SAME_SITE,
     maxAge: Number(process.env.COOKIE_MAX_AGE ?? '3600'),
     maxAgeRefresh: Number(process.env.COOKIE_MAX_AGE_REFRESH ?? '86400'),
+    domain: process.env.COOKIE_DOMAIN,
   };
 });

@@ -79,12 +79,14 @@ export class AuthController {
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
       maxAge: this.cookie.maxAge * 1000,
+      domain: this.cookie.domain,
     });
     res.cookie('refresh_token', tokens[1], {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
       maxAge: this.cookie.maxAgeRefresh * 1000,
+      domain: this.cookie.domain,
     });
     return res.json({
       message: 'Login successful',
@@ -125,18 +127,21 @@ export class AuthController {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
+      domain: this.cookie.domain,
     });
     res.cookie('refresh_token', newRefresh, {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
       maxAge: this.cookie.maxAgeRefresh * 1000,
+      domain: this.cookie.domain,
     });
     res.cookie('jwt', token, {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
       maxAge: this.cookie.maxAge * 1000,
+      domain: this.cookie.domain,
     });
 
     return {
@@ -188,11 +193,13 @@ export class AuthController {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
+      domain: this.cookie.domain,
     });
     res.clearCookie('refresh_token', {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
+      domain: this.cookie.domain,
     });
     return {
       message: 'Logout successful',
