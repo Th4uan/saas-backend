@@ -90,10 +90,7 @@ export class AuthController {
     });
     return res.json({
       message: 'Login successful',
-      user: {
-        id: user.id,
-        email: loginDto.email,
-      },
+      user,
     });
   }
 
