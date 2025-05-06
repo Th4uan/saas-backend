@@ -42,11 +42,11 @@ export class UserService {
   }
 
   async findAllDoctors(pagination: PaginationDto) {
-    const { limit = 10, offset = 0 } = pagination;
+    const { limit = 10, offset = 1 } = pagination;
 
     const skip = (offset - 1) * limit;
 
-    if (limit <= 0 || offset <= 0) {
+    if (limit <= 0 || offset < 0) {
       throw new BadRequestException('Invalid pagination parameters');
     }
     if (limit > 50) {

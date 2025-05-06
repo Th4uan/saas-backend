@@ -94,7 +94,7 @@ export class ServicesService {
     if (!pagination) {
       throw new BadRequestException('Pagination data is required');
     }
-    const { limit = 10, offset = 0 } = pagination;
+    const { limit = 10, offset = 1 } = pagination;
     const skip = (offset - 1) * limit;
 
     const services = await this.serviceRepository.find({
