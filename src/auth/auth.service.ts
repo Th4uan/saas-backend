@@ -64,6 +64,12 @@ export class AuthService {
     try {
       const sub: Jwt = await this.jwtService.verifyAsync(
         refreshToken.refreshToken,
+        {
+          secret: this.config.secret,
+          issuer: this.config.iss,
+          audience: this.config.aud,
+          algorithms: ['HS256'],
+        },
       );
 
       const user = await this.userRepository.findOneBy({
