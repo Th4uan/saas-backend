@@ -17,6 +17,7 @@ import { mapServiceToDto } from './mapper/service.mapper';
 import { PaymentService } from 'src/payment/payment.service';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { DateServiceDto } from './dto/date-service.dto';
+import { AgreementService } from 'src/agreement/agreement.service';
 
 @Injectable()
 export class ServicesService {
@@ -26,6 +27,7 @@ export class ServicesService {
     private readonly clientsService: ClientsService,
     private readonly userService: UserService,
     private readonly paymentService: PaymentService,
+    private readonly agreementService: AgreementService,
   ) {}
   async create(createServiceDto: CreateServiceDto): Promise<Service> {
     if (!createServiceDto) {
@@ -56,13 +58,21 @@ export class ServicesService {
       throw new NotFoundException('User Not Found');
     }
 
+    const agreement = await this.agreementService.getAgreementById(
+      createServiceDto.agreementId,
+    );
+
+    if (!agreement) {
+      throw new NotFoundException('Agreement Not Found');
+    }
+
     if (doctor.role !== UserRoleEnum.Doctor) {
       throw new UnauthorizedException('User is not a doctor');
     }
 
     const paymentData = {
-      formaPagamento: createServiceDto.payment.formaPagamento,
-      valor: createServiceDto.payment.valor,
+      paymentMethod: createServiceDto.payment.paymentMethod,
+      price: createServiceDto.payment.price,
       status: createServiceDto.payment.status,
     };
 
@@ -75,6 +85,7 @@ export class ServicesService {
     const data = {
       client: client,
       doctor: doctor,
+      agreement: agreement,
       payments: payment,
       date: createServiceDto.date,
       status: createServiceDto.status,
@@ -101,7 +112,7 @@ export class ServicesService {
     const services = await this.serviceRepository.find({
       take: limit,
       skip: skip,
-      relations: ['client', 'doctor', 'payments'],
+      relations: ['client', 'doctor', 'payments', 'agreement'],
     });
 
     if (!services) {
@@ -219,7 +230,7 @@ export class ServicesService {
       where: {
         date: Between(startDate, endDate),
       },
-      relations: ['client', 'doctor', 'payments'],
+      relations: ['client', 'doctor', 'payments', 'agreement'],
     });
 
     const data: ResponseServiceDto[] = services.map((service) => {

@@ -15,6 +15,7 @@ import { FilesEntity } from 'src/supabase/entities/files.entity';
 import { Payment } from 'src/payment/entity/payment.entity';
 import { TypeService } from '../enum/type-service..enum';
 import { RecurrenceEnum } from '../enum/recurrence.enum';
+import { Agreement } from 'src/agreement/entity/agreement.entity';
 
 @Entity('services')
 export class Service {
@@ -28,6 +29,10 @@ export class Service {
   @ManyToOne(() => User, (user) => user.services)
   @JoinColumn({ name: 'doctor_id' })
   doctor: User;
+
+  @ManyToOne(() => Agreement, (agreement) => agreement.services)
+  @JoinColumn({ name: 'agreement_id' })
+  agreement: Agreement;
 
   @Column()
   date: Date;

@@ -38,4 +38,8 @@ export class CreateServiceDto {
   @IsNotEmpty()
   @IsEnum(RecurrenceEnum)
   recurrence: RecurrenceEnum;
+
+  @IsNotEmpty()
+  @IsString()
+  agreementId: string;
 }

@@ -1,4 +1,6 @@
+import { PaymentMethodEnum } from 'src/payment/enums/payment-method.enum';
 import { ServiceStatusEnum } from '../enum/service-status.enum';
+import { PaymentStatusEnum } from 'src/payment/enums/payment-status.enum';
 
 export class ResponseServiceDto {
   id: string;
@@ -25,7 +27,7 @@ class Client {
 
 class Payment {
   id: string;
-  formaPagamento: string;
-  valor: number;
-  status: string;
+  paymentMethod: PaymentMethodEnum;
+  price: number;
+  status: PaymentStatusEnum;
 }

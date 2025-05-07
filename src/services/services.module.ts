@@ -6,6 +6,7 @@ import { Service } from './entities/service.entity';
 import { ClientsModule } from 'src/clients/clients.module';
 import { UserModule } from 'src/user/user.module';
 import { PaymentModule } from 'src/payment/payment.module';
+import { AgreementModule } from 'src/agreement/agreement.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { PaymentModule } from 'src/payment/payment.module';
     ClientsModule,
     UserModule,
     PaymentModule,
+    AgreementModule,
   ],
   controllers: [ServicesController],
   providers: [ServicesService],

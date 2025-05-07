@@ -16,10 +16,10 @@ export class Payment {
   id: string;
 
   @Column({ enum: PaymentMethodEnum })
-  formaPagamento: PaymentMethodEnum;
+  paymentMethod: PaymentMethodEnum;
 
   @Column()
-  valor: number;
+  price: number;
 
   @Column({ enum: PaymentStatusEnum })
   status: PaymentStatusEnum;

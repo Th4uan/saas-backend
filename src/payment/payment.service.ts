@@ -13,8 +13,8 @@ export class PaymentService {
 
   async createPayment(payment: PaymentDto): Promise<Payment> {
     const data = {
-      formaPagamento: payment.formaPagamento,
-      valor: payment.valor,
+      paymentMethod: payment.paymentMethod,
+      price: payment.price,
       status: payment.status,
     };
 
