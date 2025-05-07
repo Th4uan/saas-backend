@@ -6,14 +6,14 @@ import {
   Param,
   Query,
   BadRequestException,
-  // UseGuards,
+  UseGuards,
   HttpStatus,
   Patch,
 } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
-// import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
+import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 import {
   ApiBody,
   ApiCookieAuth,
@@ -22,9 +22,10 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { IsPublic } from 'src/common/decorators/is-public.decorator';
 
 @ApiCookieAuth('jwt')
-// @UseGuards(AuthTokenGuard)
+@UseGuards(AuthTokenGuard)
 @Controller('services')
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
@@ -88,6 +89,7 @@ export class ServicesController {
     description: 'Page Number',
     type: Number,
   })
+  @IsPublic()
   @Get()
   async findAllServices(@Query() paginationDto: PaginationDto) {
     if (!paginationDto) {

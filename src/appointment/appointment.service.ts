@@ -25,7 +25,7 @@ export class AppointmentService {
     const data = {
       date: appointmentDto.date,
       nomes: appointmentDto.nomes,
-      agreement: await this.agreementService.createAgreement(
+      agreement: await this.agreementService.getAgreementById(
         appointmentDto.agreement,
       ),
     };

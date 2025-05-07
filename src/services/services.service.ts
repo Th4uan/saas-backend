@@ -16,6 +16,7 @@ import { ResponseServiceDto } from './dto/response-service.dto';
 import { mapServiceToDto } from './mapper/service.mapper';
 import { PaymentService } from 'src/payment/payment.service';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { DateServiceDto } from './dto/date-service.dto';
 
 @Injectable()
 export class ServicesService {
@@ -201,5 +202,39 @@ export class ServicesService {
     await this.serviceRepository.save(service);
 
     return service;
+  }
+
+  async findAllServicesByDate(dateDto: DateServiceDto) {
+    if (!dateDto) {
+      throw new BadRequestException('Date is required');
+    }
+
+    dateDto.initDate.setHours(0, 0, 0, 0);
+    dateDto.endDate.setHours(23, 59, 59, 999);
+
+    
+    const startDate: Date = new Date(dateDto.initDate);
+    const endDate: Date = new Date(dateDto.endDate);
+
+    const services = await this.serviceRepository.find({
+      where: {
+        date: Between(startDate, endDate),
+      },
+      relations: ['client', 'doctor', 'payments'],
+    });
+
+    if (!services) {
+      throw new NotFoundException('No services found');
+    }
+
+    const data: ResponseServiceDto[] = services.map((service) => {
+      return mapServiceToDto(service);
+    });
+
+    if (data.length <= 0) {
+      throw new NotFoundException('No services found');
+    }
+
+    return data;
   }
 }
