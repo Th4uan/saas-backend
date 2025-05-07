@@ -49,6 +49,7 @@ export class AuthTokenGuard implements CanActivate {
         audience: this.config.aud,
         algorithms: ['HS256'],
       });
+      console.log('Payload do JWT:', payload);
       request[REQUEST_TOKEN_JWT_PAYLOAD] = payload;
     } catch {
       throw new UnauthorizedException('Invalid token');
@@ -59,6 +60,6 @@ export class AuthTokenGuard implements CanActivate {
 
   extractTokenFromCookies(request: RequestWithCookies): string | undefined {
     const token = request.cookies?.jwt || request.cookies?.['jwt'];
-    return token || undefined;
+    return token;
   }
 }
