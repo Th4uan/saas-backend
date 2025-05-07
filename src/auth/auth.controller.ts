@@ -77,14 +77,14 @@ export class AuthController {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
-      maxAge: this.cookie.maxAge * 1000,
+      maxAge: this.cookie.maxAge,
       domain: this.cookie.domain,
     });
     res.cookie('refresh_token', tokens[1], {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
-      maxAge: this.cookie.maxAgeRefresh * 1000,
+      maxAge: this.cookie.maxAgeRefresh,
       domain: this.cookie.domain,
     });
     return res.json({
@@ -137,14 +137,14 @@ export class AuthController {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
-      maxAge: this.cookie.maxAgeRefresh * 1000,
+      maxAge: this.cookie.maxAgeRefresh,
       domain: this.cookie.domain,
     });
     res.cookie('jwt', token, {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
       sameSite: this.cookie.sameSite as 'strict' | 'lax' | 'none' | undefined,
-      maxAge: this.cookie.maxAge * 1000,
+      maxAge: this.cookie.maxAge,
       domain: this.cookie.domain,
     });
 

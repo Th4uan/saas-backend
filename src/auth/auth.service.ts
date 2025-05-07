@@ -86,7 +86,7 @@ export class AuthService {
         refreshToken.refreshToken,
         cacheToken,
       );
-      if (!isTokenValid) {
+      if (isTokenValid) {
         throw new Error(invalidToken);
       }
 
