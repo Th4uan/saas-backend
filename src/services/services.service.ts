@@ -224,7 +224,7 @@ export class ServicesService {
 
     const services = await this.serviceRepository.find({
       where: {
-        date: Between(dateDto.initDate, dateDto.endDate),
+        date: Between(startDate, endDate),
       },
       relations: ['client', 'doctor', 'payments', 'agreement'],
     });
