@@ -169,7 +169,7 @@ export class ServicesController {
     };
   }
 
-  @Get('date')
+  @Post('date')
   async findAllServicesByDate(@Body() dateDto: DateServiceDto) {
     if (!dateDto) {
       throw new BadRequestException('Date is required');
