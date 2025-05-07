@@ -71,6 +71,7 @@ export class AuthService {
           algorithms: ['HS256'],
         },
       );
+      console.log('passou do verifyAsync');
 
       const user = await this.userRepository.findOneBy({
         id: sub.sub,
@@ -137,11 +138,13 @@ export class AuthService {
       aud: this.config.aud,
       iss: this.config.iss,
       secret: this.config.secret,
-      exp: this.config.jwtTtl,
+      // Converter de duração para timestamp absoluto
+      exp: Math.floor(Date.now() / 1000) + Number(this.config.jwtTtl),
     };
 
-    const acessToken = await this.jwtService.signAsync(payload);
-    return acessToken;
+    return await this.jwtService.signAsync(payload, {
+      secret: this.config.secret,
+    });
   }
 
   private async generateRefreshToken(user: User): Promise<string> {
@@ -150,10 +153,12 @@ export class AuthService {
       aud: this.config.aud,
       iss: this.config.iss,
       secret: this.config.secret,
-      exp: this.config.jwtTtlRefresh,
+      // Converter de duração para timestamp absoluto
+      exp: Math.floor(Date.now() / 1000) + Number(this.config.jwtTtlRefresh),
     };
 
-    const acessToken = await this.jwtService.signAsync(payload);
-    return acessToken;
+    return await this.jwtService.signAsync(payload, {
+      secret: this.config.secret,
+    });
   }
 }
