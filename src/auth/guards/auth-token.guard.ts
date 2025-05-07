@@ -43,10 +43,7 @@ export class AuthTokenGuard implements CanActivate {
     }
 
     try {
-      const payload: JwtPayload = await this.jwtService.verifyAsync(
-        token,
-        this.config,
-      );
+      const payload: JwtPayload = await this.jwtService.verifyAsync(token);
       request[REQUEST_TOKEN_JWT_PAYLOAD] = payload;
     } catch {
       throw new UnauthorizedException('Invalid token');
