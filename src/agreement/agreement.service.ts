@@ -50,4 +50,9 @@ export class AgreementService {
 
     await this.agreementRepository.remove(agreement);
   }
+
+  async getAllAgreements(): Promise<Agreement[]> {
+    const agreements = await this.agreementRepository.find();
+    return agreements;
+  }
 }

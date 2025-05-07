@@ -95,13 +95,6 @@ export class UserController {
   })
   @Get('doctors')
   async findAllDoctors(@Query() pagination: PaginationDto) {
-    if (!pagination) {
-      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
-    }
-
-    if (pagination.limit < 1) {
-      throw new HttpException('Invalid Data', HttpStatus.BAD_REQUEST);
-    }
     return this.userService.findAllDoctors(pagination);
   }
 

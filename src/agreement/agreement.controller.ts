@@ -30,4 +30,9 @@ export class AgreementController {
     }
     return this.agreementService.deleteAgreement(id);
   }
+
+  @Get()
+  async getAllAgreements() {
+    return this.agreementService.getAllAgreements();
+  }
 }
