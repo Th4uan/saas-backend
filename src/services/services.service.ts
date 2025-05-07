@@ -119,11 +119,11 @@ export class ServicesService {
       return mapServiceToDto(service);
     });
 
-    if (data.length <= 0) {
+    if (data.length < 0) {
       throw new NotFoundException('No services found');
     }
 
-    return data;
+    return data || [];
   }
 
   async findOneService(id: string) {
