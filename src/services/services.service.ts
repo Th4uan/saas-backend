@@ -216,8 +216,11 @@ export class ServicesService {
       throw new BadRequestException('Date is required');
     }
 
-    dateDto.initDate.setHours(0, 0, 0, 0);
-    dateDto.endDate.setHours(23, 59, 59, 999);
+    const startDate = new Date(dateDto.initDate);
+    const endDate = new Date(dateDto.endDate);
+
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
 
     const services = await this.serviceRepository.find({
       where: {
