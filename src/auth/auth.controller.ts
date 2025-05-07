@@ -15,7 +15,6 @@ import { Response } from 'express';
 import cookieConfig from './configs/cookie.config';
 import { ConfigType } from '@nestjs/config';
 import { IsPublic } from 'src/common/decorators/is-public.decorator';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RefreshTokenParam } from './params/refresh-token.param';
 import { AuthTokenGuard } from './guards/auth-token.guard';
 import {
@@ -115,11 +114,12 @@ export class AuthController {
   @HttpCode(201)
   @Post('refresh')
   async reAuthenticate(
-    @RefreshTokenParam() refreshTokenDto: RefreshTokenDto,
+    @RefreshTokenParam() refreshToken: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const [token, newRefresh] =
-      await this.authService.refreshToken(refreshTokenDto);
+    const [token, newRefresh] = await this.authService.refreshToken({
+      refreshToken,
+    });
     res.clearCookie('refresh_token', {
       httpOnly: this.cookie.httpOnly,
       secure: this.cookie.secure,
