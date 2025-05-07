@@ -64,7 +64,6 @@ export class AuthService {
     try {
       const sub: Jwt = await this.jwtService.verifyAsync(
         refreshToken.refreshToken,
-        this.config,
       );
 
       const user = await this.userRepository.findOneBy({
