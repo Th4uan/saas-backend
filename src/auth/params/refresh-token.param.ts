@@ -6,6 +6,7 @@ export const RefreshTokenParam = createParamDecorator(
     const context = ctx.switchToHttp();
     const request: RequestWithCookies = context.getRequest();
     const refreshToken = request.cookies?.['refresh_token'];
-    return refreshToken || undefined;
+    console.log('Refresh token recebido:', refreshToken); // Adicione este log
+    return refreshToken;
   },
 );

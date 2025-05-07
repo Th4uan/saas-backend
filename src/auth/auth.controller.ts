@@ -117,6 +117,13 @@ export class AuthController {
     @RefreshTokenParam() refreshToken: string,
     @Res({ passthrough: true }) res: Response,
   ) {
+    if (!refreshToken) {
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Invalid or Expired Refresh Token',
+        error: 'Unauthorized',
+      });
+    }
     const [token, newRefresh] = await this.authService.refreshToken({
       refreshToken,
     });
