@@ -46,10 +46,10 @@ export class AppointmentService {
   async getAllAppointments(
     paginationDto: PaginationDto,
   ): Promise<AppointmentDto[]> {
-    const { limit = 10, offset = 0 } = paginationDto;
+    const { limit = 10, offset = 1 } = paginationDto;
     const skip = (offset - 1) * limit;
 
-    if (limit <= 0 || offset <= 0) {
+    if (limit <= 0 || offset < 0) {
       throw new BadRequestException('Invalid pagination parameters');
     }
     if (limit > 50) {
