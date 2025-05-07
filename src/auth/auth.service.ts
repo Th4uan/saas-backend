@@ -52,7 +52,7 @@ export class AuthService {
     await this.cacheManager.set(
       `refresh_token:${user.id}`,
       hashedRefreshToken,
-      this.config.jwtTtlRefresh * 1000,
+      this.config.jwtTtlRefresh,
     );
 
     await this.cacheManager.get(`refresh_token:${user.id}`);
