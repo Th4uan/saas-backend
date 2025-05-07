@@ -219,12 +219,9 @@ export class ServicesService {
     dateDto.initDate.setHours(0, 0, 0, 0);
     dateDto.endDate.setHours(23, 59, 59, 999);
 
-    const startDate: Date = new Date(dateDto.initDate);
-    const endDate: Date = new Date(dateDto.endDate);
-
     const services = await this.serviceRepository.find({
       where: {
-        date: Between(startDate, endDate),
+        date: Between(dateDto.initDate, dateDto.endDate),
       },
       relations: ['client', 'doctor', 'payments', 'agreement'],
     });
