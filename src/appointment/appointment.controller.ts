@@ -40,11 +40,6 @@ export class AppointmentController {
   async getAllAppointments(@Query() paginationDto: PaginationDto) {
     const appointments =
       await this.appointmentService.getAllAppointments(paginationDto);
-
-    if (appointments.length === 0) {
-      throw new BadRequestException('No appointments found');
-    }
-
     return {
       message: 'Appointments found successfully',
       appointments: appointments,

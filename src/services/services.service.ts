@@ -115,10 +115,6 @@ export class ServicesService {
       relations: ['client', 'doctor', 'payments', 'agreement'],
     });
 
-    if (!services) {
-      throw new NotFoundException('No services found');
-    }
-
     const data: ResponseServiceDto[] = services.map((service) => {
       return mapServiceToDto(service);
     });
