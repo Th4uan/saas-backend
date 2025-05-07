@@ -23,6 +23,7 @@ import {
 } from '@nestjs/swagger';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { IsPublic } from 'src/common/decorators/is-public.decorator';
+import { DateServiceDto } from './dto/date-service.dto';
 
 @ApiCookieAuth('jwt')
 @UseGuards(AuthTokenGuard)
@@ -166,5 +167,13 @@ export class ServicesController {
       message: 'Service updated successfully',
       data,
     };
+  }
+
+  @Get('date')
+  async findAllServicesByDate(@Body() dateDto: DateServiceDto) {
+    if (!dateDto) {
+      throw new BadRequestException('Date is required');
+    }
+    return await this.servicesService.findAllServicesByDate(dateDto);
   }
 }

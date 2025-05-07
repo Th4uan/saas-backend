@@ -61,17 +61,15 @@ export class UserService {
       },
     });
 
-    if (!doctors) {
-      throw new HttpException('No doctors found', HttpStatus.NOT_FOUND);
-    }
-
-    return doctors.map((doctor) => {
-      return {
-        id: doctor.id,
-        fullName: doctor.fullName,
-        email: doctor.email,
-      };
-    });
+    return (
+      doctors.map((doctor) => {
+        return {
+          id: doctor.id,
+          fullName: doctor.fullName,
+          email: doctor.email,
+        };
+      }) || []
+    );
   }
 
   async findUserById(id: string) {

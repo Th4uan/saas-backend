@@ -60,15 +60,11 @@ export class AppointmentService {
       take: limit,
       relations: ['agreement'],
     });
-
-    if (appointments.length === 0) {
-      throw new BadRequestException('No appointments found');
-    }
     const data: AppointmentDto[] = appointments.map((appointment) =>
       mapAppoitmentToDto(appointment),
     );
 
-    return data;
+    return data || [];
   }
 
   async findOneAppointment(id: string): Promise<AppointmentDto> {

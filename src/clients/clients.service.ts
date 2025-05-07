@@ -69,14 +69,10 @@ export class ClientsService {
       relations: ['address'],
     });
 
-    if (clients.length === 0) {
-      throw new BadRequestException('No clients found');
-    }
-
     const clientData: ClientResponseDto[] = clients.map((client) =>
       mapperClientToDto(client),
     );
-    return clientData;
+    return clientData || [];
   }
   async findOneClientEntity(id: string): Promise<Client> {
     if (id == '' || id == null) {

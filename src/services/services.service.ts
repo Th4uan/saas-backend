@@ -212,7 +212,6 @@ export class ServicesService {
     dateDto.initDate.setHours(0, 0, 0, 0);
     dateDto.endDate.setHours(23, 59, 59, 999);
 
-    
     const startDate: Date = new Date(dateDto.initDate);
     const endDate: Date = new Date(dateDto.endDate);
 
@@ -223,18 +222,14 @@ export class ServicesService {
       relations: ['client', 'doctor', 'payments'],
     });
 
-    if (!services) {
-      throw new NotFoundException('No services found');
-    }
-
     const data: ResponseServiceDto[] = services.map((service) => {
       return mapServiceToDto(service);
     });
 
-    if (data.length <= 0) {
+    if (data.length < 0) {
       throw new NotFoundException('No services found');
     }
 
-    return data;
+    return data || [];
   }
 }
