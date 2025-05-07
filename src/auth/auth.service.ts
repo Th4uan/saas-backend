@@ -109,7 +109,7 @@ export class AuthService {
         this.config.jwtTtlRefresh,
       );
 
-      return [this.signJwtAsync(user), newRefreshToken];
+      return [await this.signJwtAsync(user), newRefreshToken];
     } catch {
       throw new UnauthorizedException(invalidToken);
     }
