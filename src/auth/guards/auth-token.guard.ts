@@ -35,6 +35,9 @@ export class AuthTokenGuard implements CanActivate {
 
     const request: Request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromCookies(request);
+
+    console.log('JWT cookie recebido:', token);
+
     if (!token) {
       throw new UnauthorizedException('Invalid token');
     }
