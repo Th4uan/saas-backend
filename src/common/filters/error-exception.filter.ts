@@ -23,22 +23,17 @@ export class ErrorExceptionFilter implements ExceptionFilter {
     const response: Response = ctx.getResponse();
     const request: Request = ctx.getRequest();
 
-    // Determinar o status HTTP adequado
     let status: number;
     if (exception instanceof HttpException) {
-      // Se for uma exceção HTTP do NestJS, use seu status
       status = exception.getStatus();
     } else if (
       'status' in exception &&
       typeof exception.status === 'function'
     ) {
-      // Se tiver um método status(), chame-o
       status = exception.status();
     } else if ('status' in exception && typeof exception.status === 'number') {
-      // Se tiver uma propriedade status numérica
       status = exception.status;
     } else {
-      // Caso contrário, use 400 para erros de validação ou 500 para outros
       status =
         exception.message.includes('required') ||
         exception.message.includes('invalid') ||
@@ -47,7 +42,6 @@ export class ErrorExceptionFilter implements ExceptionFilter {
           : HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
-    // Obter a mensagem de erro
     let message: string | Record<string, unknown>;
     if (exception instanceof HttpException) {
       const exceptionResponse = exception.getResponse();
@@ -64,7 +58,6 @@ export class ErrorExceptionFilter implements ExceptionFilter {
       message = { message: exception.message };
     }
 
-    // Estruturar a resposta (todos os campos tipados corretamente)
     const responseBody: {
       statusCode: number;
       message: string | Record<string, unknown>;
@@ -77,12 +70,10 @@ export class ErrorExceptionFilter implements ExceptionFilter {
       path: request.url,
     };
 
-    // Log para depuração
     console.log(
       `[ErrorExceptionFilter] ${status} ${request.method} ${request.url} - ${exception.message}`,
     );
 
-    // Enviar resposta
     response.status(status).json(responseBody);
   }
 }

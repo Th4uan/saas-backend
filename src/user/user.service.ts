@@ -43,7 +43,6 @@ export class UserService {
 
   async findAllDoctors(pagination: PaginationDto) {
     const { limit = 10, offset = 1 } = pagination;
-
     const skip = (offset - 1) * limit;
 
     if (limit <= 0 || offset < 0) {
@@ -61,15 +60,15 @@ export class UserService {
       },
     });
 
-    return (
-      doctors.map((doctor) => {
-        return {
-          id: doctor.id,
-          fullName: doctor.fullName,
-          email: doctor.email,
-        };
-      }) || []
-    );
+    const doctorData = doctors.map((doctor) => {
+      return {
+        id: doctor.id,
+        fullName: doctor.fullName,
+        email: doctor.email,
+      };
+    });
+
+    return doctorData;
   }
 
   async findUserById(id: string) {
