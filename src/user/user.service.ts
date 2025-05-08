@@ -68,7 +68,7 @@ export class UserService {
       };
     });
 
-    return doctorData;
+    return doctorData || [];
   }
 
   async findUserById(id: string) {
