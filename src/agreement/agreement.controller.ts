@@ -24,7 +24,7 @@ export class AgreementController {
   }
 
   @Delete(':id')
-  async deleteAgreement(id: string) {
+  async deleteAgreement(@Param('id') id: string) {
     if (id == null || id === '') {
       throw new Error('Agreement ID is required');
     }
