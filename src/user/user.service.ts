@@ -63,7 +63,7 @@ export class UserService {
     const doctorData = doctors.map((doctor) => {
       return {
         id: doctor.id,
-        fullName: doctor.fullName,
+        username: doctor.username,
         email: doctor.email,
       };
     });
