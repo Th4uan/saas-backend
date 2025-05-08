@@ -163,6 +163,7 @@ export class UserController {
     };
   }
 
+  @Get()
   async findAllUsers(@Query() pagination: PaginationDto) {
     const users = await this.userService.findAllUsers(pagination);
 
