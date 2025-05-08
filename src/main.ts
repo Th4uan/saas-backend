@@ -11,6 +11,7 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
+      transform: true, // 20 conto
     }),
   );
   app.use(cookieParser());
