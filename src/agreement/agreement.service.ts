@@ -53,6 +53,6 @@ export class AgreementService {
 
   async getAllAgreements(): Promise<Agreement[]> {
     const agreements = await this.agreementRepository.find();
-    return agreements;
+    return agreements || [];
   }
 }

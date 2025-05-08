@@ -33,6 +33,6 @@ export class AgreementController {
 
   @Get()
   async getAllAgreements() {
-    return this.agreementService.getAllAgreements();
+    return (await this.agreementService.getAllAgreements()) || [];
   }
 }
