@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
 import { AgreementService } from './agreement.service';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 
@@ -8,7 +8,7 @@ export class AgreementController {
   constructor(private readonly agreementService: AgreementService) {}
 
   @Post()
-  async createAgreement(name: string) {
+  async createAgreement(@Body('name') name: string) {
     if (!name) {
       throw new Error('Agreement name is required');
     }
