@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, UseGuards, Param } from '@nestjs/common';
 import { AgreementService } from './agreement.service';
 import { AuthTokenGuard } from 'src/auth/guards/auth-token.guard';
 
