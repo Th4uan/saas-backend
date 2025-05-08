@@ -1,7 +1,6 @@
-import { IsArray, IsDate, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateAppointmentDto {
-  @IsDate()
   @IsNotEmpty()
   date: Date;
   @IsNotEmpty()

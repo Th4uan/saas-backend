@@ -25,6 +25,10 @@ export class AppointmentController {
     if (!createAppointmentDto) {
       throw new BadRequestException('Invalid appointment data');
     }
+
+    const date = new Date(createAppointmentDto.date);
+
+    createAppointmentDto.date = date;
     const appointment =
       await this.appointmentService.createAppointment(createAppointmentDto);
     if (!appointment) {
