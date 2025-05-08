@@ -95,7 +95,7 @@ export class UserController {
   })
   @Get('doctors')
   async findAllDoctors(@Query() pagination: PaginationDto) {
-    return this.userService.findAllDoctors(pagination);
+    return (await this.userService.findAllDoctors(pagination)) || [];
   }
 
   @ApiResponse({ status: 200, description: 'User found' })
@@ -160,6 +160,15 @@ export class UserController {
     return {
       message: 'Disponibility changed successfully',
       user,
+    };
+  }
+
+  async finAllUsers(@Query() pagination: PaginationDto) {
+    const users = await this.userService.findAllUsers(pagination);
+
+    return {
+      message: 'Users found successfully',
+      users,
     };
   }
 }

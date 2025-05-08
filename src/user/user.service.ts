@@ -112,4 +112,23 @@ export class UserService {
 
     return updatedUser;
   }
+
+  async findAllUsers(pagination: PaginationDto) {
+    const { limit = 10, offset = 1 } = pagination;
+    const skip = (offset - 1) * limit;
+
+    if (limit <= 0 || offset < 0) {
+      throw new BadRequestException('Invalid pagination parameters');
+    }
+    if (limit > 50) {
+      throw new BadRequestException('Limit cannot exceed 50');
+    }
+
+    const users = await this.userRepository.find({
+      skip: skip,
+      take: limit,
+    });
+
+    return users || [];
+  }
 }
