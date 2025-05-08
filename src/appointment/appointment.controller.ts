@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   Delete,
   Get,
@@ -21,7 +22,7 @@ export class AppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}
 
   @Post()
-  async createAppointment(createAppointmentDto: CreateAppointmentDto) {
+  async createAppointment(@Body() createAppointmentDto: CreateAppointmentDto) {
     if (!createAppointmentDto) {
       throw new BadRequestException('Invalid appointment data');
     }
