@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
+  Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
@@ -12,8 +13,10 @@ import { Request } from 'express';
 import { REQUEST_TOKEN_JWT_PAYLOAD } from '../auth.constants';
 import { JwtPayload } from '../interfaces/jwt-interface.interface';
 
+@Injectable()
 export class RoleGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
+
   canActivate(
     ctx: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
