@@ -13,31 +13,25 @@ export class CertificateService {
   async insertCertificate(
     certificate: Express.Multer.File,
     password: string,
+    expiredAt: string,
   ): Promise<CertificateEntity> {
     try {
-      if (!certificate) {
-        throw new Error('Certificate file is required');
-      }
-
-      if (password == null || password === '') {
-        throw new Error('Password is required');
-      }
-
       const data = {
         certificate: certificate.buffer,
         password,
+        expiredAt,
       };
 
       const newCertificate = this.certificateRepository.create(data);
 
       return await this.certificateRepository.save(newCertificate);
     } catch (error) {
-      throw new BadRequestException('Error inserting certificate: ' + error);
+      throw new BadRequestException('Error inserting certificate: ' + error.message);
     }
   }
 
   async getCertificateById(id: string) {
-    if (id == null || id === '') {
+    if (!id) {
       throw new Error('Certificate ID is required');
     }
     const certificate = await this.certificateRepository.findOne({
@@ -52,7 +46,7 @@ export class CertificateService {
   }
 
   async deleteCertificate(id: string) {
-    if (id == null || id === '') {
+    if (!id) {
       throw new Error('Certificate ID is required');
     }
 

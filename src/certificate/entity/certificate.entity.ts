@@ -17,6 +17,9 @@ export class CertificateEntity {
   @Column()
   password: string;
 
+  @Column()
+  expiredAt: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
