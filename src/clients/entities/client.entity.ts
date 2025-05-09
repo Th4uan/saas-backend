@@ -47,10 +47,10 @@ export class Client {
   birthDate: Date;
 
   @Column()
-  escolarity: string;
+  scholarity: string;
 
   @Column()
-  nacionality: string;
+  nationality: string;
 
   @OneToMany(() => Service, (service) => service.client)
   services: Service[];
