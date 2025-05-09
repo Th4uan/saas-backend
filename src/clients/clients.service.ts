@@ -8,6 +8,7 @@ import { EncryptionService } from 'src/common/utils/encryption/encryption.servic
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { ClientResponseDto } from './dto/client-response.dto';
 import { mapperClientToDto } from './mapper/clients.mapper';
+import { Service } from 'src/services/entities/service.entity';
 
 @Injectable()
 export class ClientsService {
@@ -121,5 +122,20 @@ export class ClientsService {
     }
 
     return await this.clientRepository.delete(id);
+  }
+
+  async getServicesByClientId(clientId: string): Promise<Service[]> {
+    if (clientId == '' || clientId == null) {
+      throw new BadRequestException('Invalid client ID');
+    }
+
+    const client = await this.clientRepository.findOne({
+      where: { id: clientId },
+      relations: ['services'],
+    });
+
+    const services = client?.services;
+
+    return services || [];
   }
 }
