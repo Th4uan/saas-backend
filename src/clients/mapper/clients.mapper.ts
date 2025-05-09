@@ -14,15 +14,6 @@ export function mapperClientToDto(client: Client): ClientResponseDto {
     birthDate: client.birthDate,
     scholarity: client.scholarity,
     nationality: client.nationality,
-    address: {
-      id: client.address.id,
-      street: client.address.street,
-      number: client.address.number ?? '',
-      complement: client.address.complement,
-      neighborhood: client.address.neighborhood,
-      city: client.address.city,
-      state: client.address.state,
-      zipCode: client.address.zipCode,
-    },
+    address: client.address,
   };
 }

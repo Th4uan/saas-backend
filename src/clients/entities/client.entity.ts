@@ -1,10 +1,7 @@
-import { Address } from 'src/address/entities/address.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -21,9 +18,8 @@ export class Client {
   @Column()
   fullName: string;
 
-  @ManyToOne(() => Address, (address) => address.client)
-  @JoinColumn({ name: 'address_id' })
-  address: Address;
+  @Column()
+  address: string;
 
   @Column({ unique: true })
   cpf: string;

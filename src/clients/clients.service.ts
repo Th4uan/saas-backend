@@ -4,7 +4,6 @@ import { CreateClientDto } from './dto/create-client.dto';
 import { Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddressService } from 'src/address/address.service';
 import { EncryptionService } from 'src/common/utils/encryption/encryption.service';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { ClientResponseDto } from './dto/client-response.dto';
@@ -15,7 +14,6 @@ export class ClientsService {
   constructor(
     @InjectRepository(Client)
     private readonly clientRepository: Repository<Client>,
-    private readonly adressService: AddressService,
     private readonly encryptionService: EncryptionService,
   ) {}
   async create(createClientDto: CreateClientDto): Promise<ClientResponseDto> {
@@ -34,7 +32,7 @@ export class ClientsService {
       birthDate: createClientDto.birthDate,
       scholarity: createClientDto.scholarity,
       nationality: createClientDto.nationality,
-      address: await this.adressService.create(createClientDto.address),
+      address: createClientDto.address,
     };
 
     const client = this.clientRepository.create(clientData);
@@ -66,7 +64,6 @@ export class ClientsService {
     const clients = await this.clientRepository.find({
       take: limit,
       skip: skip,
-      relations: ['address'],
     });
 
     const clientData: ClientResponseDto[] = clients.map((client) =>
@@ -81,7 +78,6 @@ export class ClientsService {
 
     const client = await this.clientRepository.findOne({
       where: { id },
-      relations: ['address'],
     });
 
     if (!client) {
@@ -98,7 +94,6 @@ export class ClientsService {
 
     const client = await this.clientRepository.findOne({
       where: { id },
-      relations: ['address'],
     });
 
     if (!client) {
@@ -119,7 +114,6 @@ export class ClientsService {
 
     const client = await this.clientRepository.findOne({
       where: { id },
-      relations: ['address'],
     });
 
     if (!client) {
