@@ -32,9 +32,9 @@ export class ClientsService {
       civilStatus: createClientDto.civilStatus,
       rg: createClientDto.rg,
       birthDate: createClientDto.birthDate,
-      escolarity: createClientDto.escolarity,
-      nacionality: createClientDto.nacionality,
-      address: await this.adressService.create(createClientDto.adress),
+      scholarity: createClientDto.scholarity,
+      nationality: createClientDto.nationality,
+      address: await this.adressService.create(createClientDto.address),
     };
 
     const client = this.clientRepository.create(clientData);
