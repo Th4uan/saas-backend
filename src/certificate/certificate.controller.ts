@@ -15,7 +15,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class CertificateController {
   constructor(private readonly certificateService: CertificateService) {}
 
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('certificate'))
   @Post()
   async insertCertificate(
     @UploadedFile() certificate: Express.Multer.File, 
