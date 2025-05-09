@@ -37,23 +37,22 @@ export class CreateClientDto {
   civilStatus: CivilStatusEnum;
 
   @ValidateNested()
-  @Type(() => CreateAddressDto)
-  adress: CreateAddressDto;
+  @Type(() => CreateAddressDto) //string pae
+  address: CreateAddressDto;
 
   @IsNotEmpty()
   @IsString()
   rg: string;
 
   @IsNotEmpty()
-  @IsDate()
   @Type(() => Date)
   birthDate: Date;
 
   @IsNotEmpty()
   @IsString()
-  escolarity: string;
+  scholarity: string;
 
   @IsNotEmpty()
   @IsString()
-  nacionality: string;
+  nationality: string;
 }
