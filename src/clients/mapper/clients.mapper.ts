@@ -12,8 +12,8 @@ export function mapperClientToDto(client: Client): ClientResponseDto {
     civilStatus: client.civilStatus,
     rg: client.rg,
     birthDate: client.birthDate,
-    escolarity: client.escolarity,
-    nacionality: client.nacionality,
+    scholarity: client.scholarity,
+    nationality: client.nationality,
     address: {
       id: client.address.id,
       street: client.address.street,
