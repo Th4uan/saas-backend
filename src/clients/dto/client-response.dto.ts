@@ -22,6 +22,6 @@ export class ClientResponseDto {
   address: AddressResponseDto;
   rg: string;
   birthDate: Date;
-  escolarity: string;
-  nacionality: string;
+  scholarity: string;
+  nationality: string;
 }
