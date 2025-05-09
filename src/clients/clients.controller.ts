@@ -9,6 +9,7 @@ import {
   BadRequestException,
   UseGuards,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
@@ -95,9 +96,7 @@ export class ClientsController {
     @Query() pagination: PaginationDto,
   ): Promise<ClientResponseDto[]> {
     const recados = await this.clientsService.findAllClients(pagination);
-    if (recados.length <= 0) {
-      throw new BadRequestException('No clients found');
-    }
+
     return recados;
   }
 
@@ -127,9 +126,11 @@ export class ClientsController {
       throw new BadRequestException('Invalid client ID');
     }
     const client = await this.clientsService.findOneClient(id);
+
     if (!client) {
-      throw new BadRequestException('Client not found');
+      throw new NotFoundException('client not found');
     }
+
     return client;
   }
 
