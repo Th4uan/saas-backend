@@ -84,6 +84,7 @@ export class ClientsService {
     if (!client) {
       throw new BadRequestException('Client not found');
     }
+    client.cpf = this.encryptionService.decrypt(client.cpf);
 
     return client;
   }
