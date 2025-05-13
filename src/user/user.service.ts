@@ -65,6 +65,7 @@ export class UserService {
         id: doctor.id,
         username: doctor.username,
         email: doctor.email,
+        disponibility: doctor.disponibility,
       };
     });
 
