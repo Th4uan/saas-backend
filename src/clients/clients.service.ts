@@ -102,6 +102,7 @@ export class ClientsService {
       throw new BadRequestException('Client not found');
     }
 
+    client.cpf = this.encryptionService.decrypt(client.cpf);
     return mapperClientToDto(client);
   }
 
