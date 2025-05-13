@@ -1,4 +1,3 @@
-import { PaymentMethodEnum } from 'src/payment/enums/payment-method.enum';
 import { ResponseServiceDto } from '../dto/response-service.dto';
 import { Service } from '../entities/service.entity';
 
@@ -20,10 +19,12 @@ export function mapServiceToDto(service: Service): ResponseServiceDto {
       id: service.payments.id,
       price: +service.payments.price,
       status: service.payments.status,
-      paymentMethod: service.payments.paymentMethod as PaymentMethodEnum,
+      paymentMethod: service.payments.paymentMethod,
     },
     date: service.date,
     status: service.status,
     typeService: service.typeService,
+    recurrence: service.recurrence,
+    agreement: service.agreement.name,
   };
 }

@@ -1,6 +1,7 @@
 import { PaymentMethodEnum } from 'src/payment/enums/payment-method.enum';
 import { ServiceStatusEnum } from '../enum/service-status.enum';
 import { PaymentStatusEnum } from 'src/payment/enums/payment-status.enum';
+import { RecurrenceEnum } from '../enum/recurrence.enum';
 
 export class ResponseServiceDto {
   id: string;
@@ -10,6 +11,8 @@ export class ResponseServiceDto {
   date: Date;
   status: ServiceStatusEnum;
   typeService: string;
+  recurrence: RecurrenceEnum;
+  agreement: string;
 }
 
 class Doctor {
