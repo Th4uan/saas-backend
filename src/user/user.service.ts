@@ -72,6 +72,20 @@ export class UserService {
     return doctorData || [];
   }
 
+  async getServicesByDoctorId(doctorId: string) {
+    const doctor = await this.userRepository.findOne({
+      where: {
+        id: doctorId,
+      },
+      relations: ['services'],
+    });
+    if (!doctor) {
+      throw new HttpException('Doctor not found', HttpStatus.NOT_FOUND);
+    }
+    const services = doctor.services;
+    return services || [];
+  }
+
   async findUserById(id: string) {
     const user = await this.userRepository.findOneBy({ id });
 

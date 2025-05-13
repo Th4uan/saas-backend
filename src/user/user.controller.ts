@@ -118,6 +118,14 @@ export class UserController {
     return user;
   }
 
+  async getServicesByDoctorId(id: string) {
+    const services = await this.userService.getServicesByDoctorId(id);
+    if (!services) {
+      throw new HttpException('Doctor not found', HttpStatus.NOT_FOUND);
+    }
+    return services || [];
+  }
+
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
   //   return this.userService.update(+id, updateUserDto);
