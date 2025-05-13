@@ -59,7 +59,7 @@ export class SupabaseController {
     const fileExpecs: FileDto = {
       clientId: password.clientId,
       serviceId: password.serviceId,
-      doctorId: password.certificateId,
+      doctorId: password.doctorId,
     };
 
     const signedPdf = await this.supabaseService.signUpload(
