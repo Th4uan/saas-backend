@@ -7,7 +7,6 @@ import {
   Param,
   Post,
   UploadedFile,
-  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
@@ -55,7 +54,7 @@ export class SupabaseController {
   @Post('sign/upload')
   @UseInterceptors(FilesInterceptor('file'))
   async signUpload(
-    @UploadedFiles() file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
     @Body() password: FileExpecsDto,
   ) {
     if (!file) {
