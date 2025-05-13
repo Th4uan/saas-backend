@@ -7,11 +7,11 @@ import { User } from 'src/user/entities/user.entity';
 @Injectable()
 export class StampService {
   async aplicarCarimboBufferNoPDF(
-    pdfBuffer: Express.Multer.File,
+    pdfBuffer: Buffer,
     doctor: User,
     client: Client,
   ): Promise<Buffer> {
-    const pdfDoc = await PDFDocument.load(pdfBuffer.buffer);
+    const pdfDoc = await PDFDocument.load(pdfBuffer);
 
     const carimboBuffer = this.genarateStampBuffer(
       doctor.fullName,

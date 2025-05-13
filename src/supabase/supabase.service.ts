@@ -129,17 +129,18 @@ export class SupabaseService {
     if (!doctor || doctor.role != UserRoleEnum.Doctor) {
       throw new BadRequestException('No doctor provided');
     }
-    const stampedBuffer = await this.stampService.aplicarCarimboBufferNoPDF(
-      file,
-      doctor,
-      client,
-    );
 
-    const signedPdf = signPdf(stampedBuffer, pfxBuffer.certificate, password);
+    const signedPdf = signPdf(file.buffer, pfxBuffer.certificate, password);
 
     if (!signedPdf) {
       throw new BadRequestException('Error signing PDF');
     }
+
+    const stampedBuffer = await this.stampService.aplicarCarimboBufferNoPDF(
+      signedPdf,
+      doctor,
+      client,
+    );
 
     const result = await this.saveDatabaseFile(file, fileDto, true);
 
@@ -151,7 +152,7 @@ export class SupabaseService {
 
     const { data, error } = await this.supabase.storage
       .from(this.bucket)
-      .upload(filePath, signedPdf, {
+      .upload(filePath, stampedBuffer, {
         contentType: file.mimetype,
         upsert: true,
       });
