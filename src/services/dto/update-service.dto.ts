@@ -4,8 +4,8 @@ import { ServiceStatusEnum } from '../enum/service-status.enum';
 export class UpdateServiceDto {
   @IsEnum(ServiceStatusEnum)
   @IsOptional()
-  status: ServiceStatusEnum;
+  status?: ServiceStatusEnum;
 
   @IsOptional()
-  date: Date;
+  date?: Date;
 }
