@@ -73,7 +73,6 @@ export class ServicesService {
     const paymentData = {
       paymentMethod: createServiceDto.payment.paymentMethod,
       price: createServiceDto.payment.price,
-      status: createServiceDto.payment.status,
     };
 
     const payment = await this.paymentService.createPayment(paymentData);
@@ -204,6 +203,10 @@ export class ServicesService {
 
     if (update.status) {
       service.status = update.status;
+    }
+
+    if (update.date) {
+      service.date = new Date(update.date);
     }
 
     await this.serviceRepository.save(service);
