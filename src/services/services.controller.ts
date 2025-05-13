@@ -165,6 +165,7 @@ export class ServicesController {
 
     return {
       message: 'Service updated successfully',
+      doctorUsername: data.doctor.username,
       data,
     };
   }
