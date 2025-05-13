@@ -1,4 +1,5 @@
 export enum ServiceStatusEnum {
+  AGENDADO = 'AGENDADO',
   EM_FILA = 'EM_FILA',
   EM_PROGRESSO = 'EM_PROGRESSO',
   CONCLUIDA = 'CONCLUIDA',
