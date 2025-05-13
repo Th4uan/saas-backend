@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Payment } from './entity/payment.entity';
 import { Repository } from 'typeorm';
 import { PaymentDto } from './dto/payment.dto';
+import { PaymentStatusEnum } from './enums/payment-status.enum';
 
 @Injectable()
 export class PaymentService {
@@ -15,7 +16,7 @@ export class PaymentService {
     const data = {
       paymentMethod: payment.paymentMethod,
       price: payment.price,
-      status: payment.status,
+      status: PaymentStatusEnum.PENDING,
     };
 
     if (!data) {
