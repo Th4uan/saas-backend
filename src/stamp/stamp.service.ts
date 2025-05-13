@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { createCanvas } from 'canvas';
+import { createCanvas, registerFont } from 'canvas';
 import { PDFDocument } from 'pdf-lib';
 import { Client } from 'src/clients/entities/client.entity';
 import { User } from 'src/user/entities/user.entity';
@@ -11,6 +11,9 @@ export class StampService {
     doctor: User,
     client: Client,
   ): Promise<Buffer> {
+    registerFont('src/assets/fonts/LiberationSans-Regular.ttf', {
+      family: 'LiberationSans',
+    });
     const pdfDoc = await PDFDocument.load(pdfBuffer);
 
     const carimboBuffer = this.genarateStampBuffer(
@@ -46,25 +49,21 @@ export class StampService {
     nomeClient: string,
     idClient: string,
   ): Buffer {
-    // Aumentando a largura e altura para garantir espaço suficiente
     const largura = 600;
     const altura = 150;
     const canvas = createCanvas(largura, altura);
     const ctx = canvas.getContext('2d');
 
-    // Limpar o canvas e configurar o estilo
     ctx.clearRect(0, 0, largura, altura);
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, largura, altura);
     ctx.fillStyle = 'black';
-    
-    // Usar uma fonte mais compatível e aumentar o tamanho
-    ctx.font = 'bold 14px Arial';
+
+    ctx.font = 'bold 14px LiberationSans';
 
     const data = new Date();
-    // Formatando a data de forma mais simples para evitar problemas de codificação
-    const dataHoraFormatada = data.toLocaleString('pt-BR', { 
-      timeZone: 'America/Sao_Paulo' 
+    const dataHoraFormatada = data.toLocaleString('pt-BR', {
+      timeZone: 'America/Sao_Paulo',
     });
 
     const linhas = [
@@ -74,7 +73,6 @@ export class StampService {
       `Data: ${dataHoraFormatada}`,
     ];
 
-    // Aumentando o espaçamento entre as linhas
     linhas.forEach((linha, index) => {
       ctx.fillText(linha, 10, 30 * (index + 1));
     });
