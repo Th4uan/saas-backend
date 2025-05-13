@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -57,10 +56,6 @@ export class SupabaseController {
     @UploadedFile() file: Express.Multer.File,
     @Body() password: FileExpecsDto,
   ) {
-    if (!file) {
-      throw new BadRequestException('Invalid file');
-    }
-
     const fileExpecs: FileDto = {
       clientId: password.clientId,
       serviceId: password.serviceId,
