@@ -118,6 +118,7 @@ export class UserController {
     return user;
   }
 
+  @Post('doctor/services')
   async getServicesByDoctorId(id: string) {
     const services = await this.userService.getServicesByDoctorId(id);
     if (!services) {
