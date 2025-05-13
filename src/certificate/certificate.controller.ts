@@ -18,7 +18,7 @@ export class CertificateController {
   @UseInterceptors(FileInterceptor('certificate'))
   @Post()
   async insertCertificate(
-    @UploadedFile() certificate: Express.Multer.File, 
+    @UploadedFile() certificate: Express.Multer.File,
     @Body('password') password: string,
     @Body('expiredAt') expiredAt: string,
   ) {
@@ -26,7 +26,11 @@ export class CertificateController {
     if (!password) throw new Error('Password is required');
     if (!expiredAt) throw new Error('Expiration date is required');
 
-    return this.certificateService.insertCertificate(certificate, password, expiredAt);
+    return this.certificateService.insertCertificate(
+      certificate,
+      password,
+      expiredAt,
+    );
   }
 
   @Get(':id')

@@ -12,6 +12,9 @@ import { Repository } from 'typeorm';
 import { ClientsService } from 'src/clients/clients.service';
 import { ServicesService } from 'src/services/services.service';
 import { CertificateService } from 'src/certificate/certificate.service';
+import { StampService } from 'src/stamp/stamp.service';
+import { UserService } from 'src/user/user.service';
+import { UserRoleEnum } from 'src/user/enums/user-role.enum';
 
 @Injectable()
 export class SupabaseService {
@@ -24,6 +27,8 @@ export class SupabaseService {
     private readonly clientService: ClientsService,
     private readonly servicesService: ServicesService,
     private readonly certificateService: CertificateService,
+    private readonly stampService: StampService,
+    private readonly doctorService: UserService,
   ) {
     this.supabase = new SupabaseClient(
       process.env.SUPABASE_URL!,
@@ -115,7 +120,22 @@ export class SupabaseService {
       throw new BadRequestException('No password provided');
     }
 
-    const signedPdf = signPdf(file.buffer, pfxBuffer.certificate, password);
+    const doctor = await this.doctorService.findUserById(fileDto.doctorId);
+
+    const client = await this.clientService.findOneClientEntity(
+      fileDto.clientId,
+    );
+
+    if (!doctor || doctor.role != UserRoleEnum.Doctor) {
+      throw new BadRequestException('No doctor provided');
+    }
+    const stampedBuffer = await this.stampService.aplicarCarimboBufferNoPDF(
+      file,
+      doctor,
+      client,
+    );
+
+    const signedPdf = signPdf(stampedBuffer, pfxBuffer.certificate, password);
 
     if (!signedPdf) {
       throw new BadRequestException('Error signing PDF');

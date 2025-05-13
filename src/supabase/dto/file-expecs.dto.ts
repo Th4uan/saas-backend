@@ -12,4 +12,8 @@ export class FileExpecsDto {
   @IsString()
   @IsNotEmpty()
   certificateId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  doctorId: string;
 }

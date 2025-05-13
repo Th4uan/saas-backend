@@ -8,4 +8,8 @@ export class FileDto {
   @IsString()
   @IsNotEmpty()
   serviceId: string;
+
+  @IsString()
+  @IsNotEmpty()
+  doctorId: string;
 }

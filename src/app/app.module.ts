@@ -26,6 +26,7 @@ import { AppointmentModule } from 'src/appointment/appointment.module';
 import { PaymentModule } from 'src/payment/payment.module';
 import { AgreementModule } from 'src/agreement/agreement.module';
 import { CertificateModule } from 'src/certificate/certificate.module';
+import { StampModule } from 'src/stamp/stamp.module';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { CertificateModule } from 'src/certificate/certificate.module';
     PaymentModule,
     AgreementModule,
     CertificateModule,
+    StampModule,
   ],
   controllers: [AppController],
   providers: [
