@@ -46,28 +46,37 @@ export class StampService {
     nomeClient: string,
     idClient: string,
   ): Buffer {
+    // Aumentando a largura e altura para garantir espaço suficiente
     const largura = 600;
-    const altura = 130;
+    const altura = 150;
     const canvas = createCanvas(largura, altura);
     const ctx = canvas.getContext('2d');
 
+    // Limpar o canvas e configurar o estilo
     ctx.clearRect(0, 0, largura, altura);
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, largura, altura);
     ctx.fillStyle = 'black';
-    ctx.font = '16px Arial';
+    
+    // Usar uma fonte mais compatível e aumentar o tamanho
+    ctx.font = 'bold 14px Arial';
 
     const data = new Date();
-    const dataHoraFormatada =
-      data.toISOString().replace('T', ' ').split('.')[0] + " -03'00";
+    // Formatando a data de forma mais simples para evitar problemas de codificação
+    const dataHoraFormatada = data.toLocaleString('pt-BR', { 
+      timeZone: 'America/Sao_Paulo' 
+    });
 
     const linhas = [
-      `${nomeClient}:${idClient}`,
-      'Assinado de forma digital por',
-      `${nomeDoctor}:${idDoctor}`,
-      `Dados: ${dataHoraFormatada}`,
+      `${nomeClient} (ID: ${idClient})`,
+      'Assinado digitalmente por:',
+      `${nomeDoctor} (ID: ${idDoctor})`,
+      `Data: ${dataHoraFormatada}`,
     ];
 
+    // Aumentando o espaçamento entre as linhas
     linhas.forEach((linha, index) => {
-      ctx.fillText(linha, 10, 25 * (index + 1));
+      ctx.fillText(linha, 10, 30 * (index + 1));
     });
 
     return canvas.toBuffer('image/png');
