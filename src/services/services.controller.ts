@@ -146,10 +146,9 @@ export class ServicesController {
     description: 'Invalid token',
   })
   @Get('day')
-  async findAllServicesByDay() {
-    return this.servicesService.findAllServiceByDay();
-  }
-
+  // async findAllServicesByDay() {
+  //   return this.servicesService.findAllServiceByDay();
+  // }
   @Patch(':id')
   async updateService(
     @Param('id') id: string,

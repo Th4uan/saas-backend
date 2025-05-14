@@ -159,34 +159,34 @@ export class ServicesService {
     return service;
   }
 
-  async findAllServicesByDate(dateDto: DateServiceDto) {
-    if (!dateDto) {
-      throw new BadRequestException('Date is required');
-    }
-  
-    const [startYear, startMonth, startDay] = dateDto.initDate.split('-').map(Number);
-    const [endYear, endMonth, endDay] = dateDto.endDate.split('-').map(Number);
-  
-    const startDate = new Date(startYear, startMonth - 1, startDay, 0, 0, 0, 0);
-    const endDate = new Date(endYear, endMonth - 1, endDay, 23, 59, 59, 999);
-  
-    const services = await this.serviceRepository.find({
-      where: {
-        date: Between(startDate, endDate),
-      },
-      relations: ['client', 'doctor', 'payments', 'agreement'],
-    });
-  
-    const data: ResponseServiceDto[] = services.map((service) => {
-      return mapServiceToDto(service);
-    });
-  
-    if (data.length <= 0) {
-      throw new NotFoundException('No services found');
-    }
-  
-    return data;
-  }
+  // async findAllServicesByDate(dateDto: DateServiceDto) {
+  //   if (!dateDto) {
+  //     throw new BadRequestException('Date is required');
+  //   }
+
+  //   const [startYear, startMonth, startDay] = dateDto.initDate.split('-').map(Number);
+  //   const [endYear, endMonth, endDay] = dateDto.endDate.split('-').map(Number);
+
+  //   const startDate = new Date(startYear, startMonth - 1, startDay, 0, 0, 0, 0);
+  //   const endDate = new Date(endYear, endMonth - 1, endDay, 23, 59, 59, 999);
+
+  //   const services = await this.serviceRepository.find({
+  //     where: {
+  //       date: Between(startDate, endDate),
+  //     },
+  //     relations: ['client', 'doctor', 'payments', 'agreement'],
+  //   });
+
+  //   const data: ResponseServiceDto[] = services.map((service) => {
+  //     return mapServiceToDto(service);
+  //   });
+
+  //   if (data.length <= 0) {
+  //     throw new NotFoundException('No services found');
+  //   }
+
+  //   return data;
+  // }
 
   async updateServiceStatus(id: string, update: UpdateServiceDto) {
     if (id == '' || id == null) {

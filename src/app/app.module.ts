@@ -60,6 +60,7 @@ import { StampModule } from 'src/stamp/stamp.module';
           database: config.database.database,
           autoLoadEntities: config.database.autoLoadEntities,
           synchronize: true, // desativar depois
+          timezone: 'America/Sao_Paulo',
         };
       },
     }),
