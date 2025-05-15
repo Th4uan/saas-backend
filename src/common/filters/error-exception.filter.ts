@@ -7,73 +7,98 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-@Catch(Error)
-export class ErrorExceptionFilter implements ExceptionFilter {
-  catch(
-    exception:
-      | Error
-      | HttpException
-      | (Error & {
-          status?: number | (() => number);
-          getResponse?: () => any;
-        }),
-    host: ArgumentsHost,
-  ) {
+interface HttpExceptionResponse {
+  timestamp: string;
+  path: string;
+  error: string;
+  statusCode: number;
+  message: string;
+  data?: unknown;
+}
+
+interface ExceptionResult {
+  error?: string;
+  message?: string;
+  data?: unknown;
+}
+
+@Catch()
+export class AllExceptionsFilter implements ExceptionFilter {
+  catch(exception: Error, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
-    const response: Response = ctx.getResponse();
-    const request: Request = ctx.getRequest();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
 
-    let status: number;
-    if (exception instanceof HttpException) {
-      status = exception.getStatus();
-    } else if (
-      'status' in exception &&
-      typeof exception.status === 'function'
-    ) {
-      status = exception.status();
-    } else if ('status' in exception && typeof exception.status === 'number') {
-      status = exception.status;
-    } else {
-      status =
-        exception.message.includes('required') ||
-        exception.message.includes('invalid') ||
-        exception.message.includes('not found')
-          ? HttpStatus.BAD_REQUEST
-          : HttpStatus.INTERNAL_SERVER_ERROR;
+    const status =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
+
+    const exceptionResponse =
+      exception instanceof HttpException
+        ? exception.getResponse()
+        : { message: exception.message };
+
+    const result: ExceptionResult =
+      typeof exceptionResponse === 'string'
+        ? { message: exceptionResponse }
+        : (exceptionResponse as ExceptionResult);
+
+    if (request.url.includes('/health')) {
+      response.status(status).json(result);
+      return;
     }
 
-    let message: string | Record<string, unknown>;
-    if (exception instanceof HttpException) {
-      const exceptionResponse = exception.getResponse();
-      message =
-        typeof exceptionResponse === 'object'
-          ? (exceptionResponse as Record<string, unknown>)
-          : { message: exception.message };
-    } else if (
-      'getResponse' in exception &&
-      typeof exception.getResponse === 'function'
-    ) {
-      message = exception.getResponse() as Record<string, unknown>;
-    } else {
-      message = { message: exception.message };
+    if (exception.name === 'EntityNotFoundError') {
+      const type = exception.message
+        .split(' matching: ')[0]
+        .replace(/"/g, '')
+        .trim();
+
+      const data: HttpExceptionResponse = {
+        timestamp: new Date().toISOString(),
+        path: decodeURIComponent(request.url),
+        error: 'Not Found',
+        statusCode: HttpStatus.NOT_FOUND,
+        message: `Could not find any entity of type ${type}`,
+      };
+
+      response.status(HttpStatus.NOT_FOUND).json(data);
+      return;
     }
 
-    const responseBody: {
-      statusCode: number;
-      message: string | Record<string, unknown>;
-      timestamp: string;
-      path: string;
-    } = {
-      statusCode: status,
-      message: message,
+    if (status >= 500) {
+      const error = HttpStatus[status] || 'Server Error';
+      const data: HttpExceptionResponse = {
+        timestamp: new Date().toISOString(),
+        path: decodeURIComponent(request.url),
+        error,
+        statusCode: status,
+        message: error,
+      };
+
+      console.error(`[ERROR] ${exception.message}`, exception.stack);
+
+      response.status(status).json(data);
+      return;
+    }
+
+    const data: HttpExceptionResponse = {
       timestamp: new Date().toISOString(),
-      path: request.url,
+      path: decodeURIComponent(request.url),
+      error: result?.error || result?.message || status.toString(),
+      statusCode: status,
+      message: result.message || 'Erro desconhecido',
     };
 
-    console.log(
-      `[ErrorExceptionFilter] ${status} ${request.method} ${request.url} - ${exception.message}`,
-    );
+    if (result?.data) {
+      data.data = result.data;
+    }
 
-    response.status(status).json(responseBody);
+    if (status >= 500) {
+      console.error(`[ERROR] ${JSON.stringify(data)}`, exception.stack);
+    }
+
+    response.status(status).json(data);
   }
 }
