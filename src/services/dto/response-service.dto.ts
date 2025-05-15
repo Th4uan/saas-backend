@@ -19,6 +19,7 @@ class Doctor {
   id: string;
   fullName: string;
   email: string;
+  username: string;
 }
 
 class Client {
