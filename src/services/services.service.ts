@@ -257,8 +257,8 @@ export class ServicesService {
       throw new NotFoundException('Serviço não encontrado');
     }
 
-    await this.serviceRepository.update(id, { records });
-
-    return this.findOneServiceEntity(id);
+    service.records = records;
+    await this.serviceRepository.save(service);
+    return service;
   }
 }
