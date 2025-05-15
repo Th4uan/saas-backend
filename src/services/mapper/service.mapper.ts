@@ -1,7 +1,11 @@
+import { EncryptionService } from 'src/common/utils/encryption/encryption.service';
 import { ResponseServiceDto } from '../dto/response-service.dto';
 import { Service } from '../entities/service.entity';
 
-export function mapServiceToDto(service: Service): ResponseServiceDto {
+export function mapServiceToDto(
+  service: Service,
+  encript: EncryptionService,
+): ResponseServiceDto {
   return {
     id: service.id,
     client: {
@@ -10,7 +14,7 @@ export function mapServiceToDto(service: Service): ResponseServiceDto {
       phone: service.client.phone,
       phoneIsWhatsApp: service.client.phoneIsWhatsApp,
       rg: service.client.rg,
-      cpf: service.client.cpf,
+      cpf: encript.decrypt(service.client.cpf),
     },
     doctor: {
       id: service.doctor.id,

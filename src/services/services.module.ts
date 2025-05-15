@@ -7,6 +7,7 @@ import { ClientsModule } from 'src/clients/clients.module';
 import { UserModule } from 'src/user/user.module';
 import { PaymentModule } from 'src/payment/payment.module';
 import { AgreementModule } from 'src/agreement/agreement.module';
+import { EncryptionModule } from 'src/common/utils/encryption/encryption.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AgreementModule } from 'src/agreement/agreement.module';
     UserModule,
     PaymentModule,
     AgreementModule,
+    EncryptionModule,
   ],
   controllers: [ServicesController],
   providers: [ServicesService],

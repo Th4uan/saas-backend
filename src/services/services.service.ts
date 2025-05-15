@@ -18,6 +18,7 @@ import { PaymentService } from 'src/payment/payment.service';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { DateServiceDto } from './dto/date-service.dto';
 import { AgreementService } from 'src/agreement/agreement.service';
+import { EncryptionService } from 'src/common/utils/encryption/encryption.service';
 
 @Injectable()
 export class ServicesService {
@@ -28,6 +29,7 @@ export class ServicesService {
     private readonly userService: UserService,
     private readonly paymentService: PaymentService,
     private readonly agreementService: AgreementService,
+    private readonly encryptionService: EncryptionService,
   ) {}
   async create(createServiceDto: CreateServiceDto): Promise<Service> {
     if (!createServiceDto) {
@@ -115,7 +117,7 @@ export class ServicesService {
     });
 
     const data: ResponseServiceDto[] = services.map((service) => {
-      return mapServiceToDto(service);
+      return mapServiceToDto(service, this.encryptionService);
     });
 
     if (data.length < 0) {
@@ -234,7 +236,7 @@ export class ServicesService {
     });
 
     const data: ResponseServiceDto[] = services.map((service) => {
-      return mapServiceToDto(service);
+      return mapServiceToDto(service, this.encryptionService);
     });
 
     if (data.length < 0) {
