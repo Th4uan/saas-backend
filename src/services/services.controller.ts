@@ -145,7 +145,7 @@ export class ServicesController {
     status: HttpStatus.FORBIDDEN,
     description: 'Invalid token',
   })
-  @Get('day')
+  // @Get('day')
   // async findAllServicesByDay() {
   //   return this.servicesService.findAllServiceByDay();
   // }
