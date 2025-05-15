@@ -33,5 +33,6 @@ export function mapServiceToDto(
     typeService: service.typeService,
     recurrence: service.recurrence,
     agreement: service.agreement.name,
+    records: service.records,
   };
 }

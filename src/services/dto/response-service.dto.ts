@@ -13,6 +13,7 @@ export class ResponseServiceDto {
   typeService: string;
   recurrence: RecurrenceEnum;
   agreement: string;
+  records: string[];
 }
 
 class Doctor {
