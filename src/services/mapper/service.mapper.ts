@@ -9,6 +9,8 @@ export function mapServiceToDto(service: Service): ResponseServiceDto {
       fullName: service.client.fullName,
       phone: service.client.phone,
       phoneIsWhatsApp: service.client.phoneIsWhatsApp,
+      rg: service.client.rg,
+      cpf: service.client.cpf,
     },
     doctor: {
       id: service.doctor.id,

@@ -27,6 +27,8 @@ class Client {
   fullName: string;
   phone: string;
   phoneIsWhatsApp: boolean;
+  rg: string;
+  cpf: string;
 }
 
 class Payment {
