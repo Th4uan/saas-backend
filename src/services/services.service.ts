@@ -243,4 +243,20 @@ export class ServicesService {
 
     return data || [];
   }
+
+  async updateServiceRecords(id: string, records: string[]): Promise<Service> {
+    if (id === '' || id === null) {
+      throw new BadRequestException('ID do serviço é obrigatório');
+    }
+
+    const service = await this.findOneServiceEntity(id);
+
+    if (!service) {
+      throw new NotFoundException('Serviço não encontrado');
+    }
+
+    await this.serviceRepository.update(id, { records });
+
+    return this.findOneServiceEntity(id);
+  }
 }

@@ -176,4 +176,56 @@ export class ServicesController {
     }
     return await this.servicesService.findAllServicesByDate(dateDto);
   }
+
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Records atualizados com sucesso',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'ID do serviço inválido',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Serviço não encontrado',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'ID do serviço',
+    type: String,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        records: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+          description: 'Lista de registros',
+        },
+      },
+    },
+  })
+  @Patch(':id/records')
+  async updateServiceRecords(
+    @Param('id') id: string,
+    @Body('records') records: string[],
+  ) {
+    if (id === '' || id === null) {
+      throw new BadRequestException('ID do serviço é obrigatório');
+    }
+
+    const service = await this.servicesService.updateServiceRecords(
+      id,
+      records,
+    );
+
+    return {
+      message: 'Records atualizados com sucesso',
+      service,
+    };
+  }
 }

@@ -58,4 +58,7 @@ export class Service {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column('simple-array', { nullable: true })
+  records: string[];
 }
