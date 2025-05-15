@@ -1,4 +1,4 @@
-import { ResponseServiceDto } from '../dto/response-service.dto';
+nameimport { ResponseServiceDto } from '../dto/response-service.dto';
 import { Service } from '../entities/service.entity';
 
 export function mapServiceToDto(service: Service): ResponseServiceDto {
@@ -14,6 +14,7 @@ export function mapServiceToDto(service: Service): ResponseServiceDto {
       id: service.doctor.id,
       fullName: service.doctor.fullName,
       email: service.doctor.email,
+      username: service.doctor.username,
     },
     payment: {
       id: service.payments.id,
