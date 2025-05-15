@@ -23,7 +23,7 @@ interface ExceptionResult {
 }
 
 @Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
+export class ErrorExceptionFilter implements ExceptionFilter {
   catch(exception: Error, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();

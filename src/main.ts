@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ErrorExceptionFilter } from './common/filters/error-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,8 @@ async function bootstrap() {
       transform: true, // 20 conto
     }),
   );
+
+  app.useGlobalFilters(new ErrorExceptionFilter());
   app.use(cookieParser());
 
   app.use(helmet());
