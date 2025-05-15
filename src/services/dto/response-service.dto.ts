@@ -7,7 +7,7 @@ export class ResponseServiceDto {
   id: string;
   client: Client;
   doctor: Doctor;
-  payment: Payment;
+  payments: Payment;
   date: Date;
   status: ServiceStatusEnum;
   typeService: string;

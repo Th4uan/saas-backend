@@ -22,7 +22,7 @@ export function mapServiceToDto(
       email: service.doctor.email,
       username: service.doctor.username,
     },
-    payment: {
+    payments: {
       id: service.payments.id,
       price: +service.payments.price,
       status: service.payments.status,
