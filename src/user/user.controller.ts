@@ -118,8 +118,8 @@ export class UserController {
     return user;
   }
 
-  @Post('doctor/services')
-  async getServicesByDoctorId(id: string) {
+  @Get('doctor/services/:id')
+  async getServicesByDoctorId(@Param('id') id: string) {
     const services = await this.userService.getServicesByDoctorId(id);
     if (!services) {
       throw new HttpException('Doctor not found', HttpStatus.NOT_FOUND);
