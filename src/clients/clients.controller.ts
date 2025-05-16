@@ -147,6 +147,7 @@ export class ClientsController {
     return this.clientsService.remove(id);
   }
 
+  @IsPublic()
   @Get('services/:clientId')
   async getServicesByClientId(@Param('clientId') id: string) {
     const data = await this.clientsService.getServicesByClientId(id);
