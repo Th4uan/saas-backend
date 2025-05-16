@@ -33,6 +33,11 @@ export class CertificateController {
     );
   }
 
+  @Get()
+  async getAllCertificates() {
+    return this.certificateService.getAllCertificates();
+  }
+
   @Get(':id')
   async getCertificateById(@Param('id') id: string) {
     if (!id) {

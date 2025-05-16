@@ -26,7 +26,7 @@ export class CertificateService {
 
       return await this.certificateRepository.save(newCertificate);
     } catch (error) {
-      throw new BadRequestException('Error inserting certificate: ' + error.message);
+      throw new BadRequestException('Error inserting certificate: ' + error);
     }
   }
 
@@ -59,5 +59,19 @@ export class CertificateService {
     }
 
     await this.certificateRepository.delete(id);
+  }
+
+  async getAllCertificates() {
+    try {
+      const certificates = await this.certificateRepository.find();
+      // Retorna apenas os dados necessários, sem o buffer do certificado
+      return certificates.map((cert) => ({
+        id: cert.id,
+        name: cert.password,
+      }));
+    } catch (error) {
+      console.error('Erro ao buscar certificados:', error);
+      throw new Error('Não foi possível buscar os certificados');
+    }
   }
 }
