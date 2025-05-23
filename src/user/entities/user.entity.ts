@@ -9,6 +9,7 @@ import {
 import { UserRoleEnum } from '../enums/user-role.enum';
 import { Service } from 'src/services/entities/service.entity';
 import { DisponibilityEnum } from '../enums/disponibility.enum';
+import { CertificateEntity } from 'src/certificate/entity/certificate.entity';
 
 @Entity('users')
 export class User {
@@ -35,6 +36,9 @@ export class User {
 
   @OneToMany(() => Service, (service) => service.doctor)
   services: Service[];
+
+  @OneToMany(() => CertificateEntity, (certificate) => certificate.doctorId)
+  certificates: CertificateEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

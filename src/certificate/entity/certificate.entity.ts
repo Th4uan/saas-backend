@@ -1,7 +1,10 @@
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -16,6 +19,10 @@ export class CertificateEntity {
 
   @Column()
   password: string;
+
+  @ManyToOne(() => User, (doctor) => doctor.certificates)
+  @JoinColumn({ name: 'doctorId' })
+  doctorId: User;
 
   @Column()
   expiredAt: string;

@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { CertificateService } from './certificate.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CertificateDTO } from './dto/certificate.dto';
 
 @Controller('certificate')
 export class CertificateController {
@@ -19,17 +20,13 @@ export class CertificateController {
   @Post()
   async insertCertificate(
     @UploadedFile() certificate: Express.Multer.File,
-    @Body('password') password: string,
-    @Body('expiredAt') expiredAt: string,
+    @Body() certificateDTO: CertificateDTO,
   ) {
     if (!certificate) throw new Error('Certificate file is required');
-    if (!password) throw new Error('Password is required');
-    if (!expiredAt) throw new Error('Expiration date is required');
 
     return this.certificateService.insertCertificate(
       certificate,
-      password,
-      expiredAt,
+      certificateDTO,
     );
   }
 
