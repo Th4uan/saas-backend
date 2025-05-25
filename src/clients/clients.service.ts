@@ -142,9 +142,6 @@ export class ClientsService {
         'payments',
         'files',
       ],
-      order: {
-        date: 'ASC',
-      },
     });
 
     const services = client?.services;
