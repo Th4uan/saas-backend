@@ -132,9 +132,7 @@ export class ClientsService {
     }
 
     const client = await this.clientRepository.findOne({
-      where: {
-        client: { id: clientId },
-      },
+      where: { id: clientId },
       relations: [
         'client',
         'doctor',
