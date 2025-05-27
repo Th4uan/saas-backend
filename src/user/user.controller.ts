@@ -93,6 +93,7 @@ export class UserController {
     type: Number,
     example: 10,
   })
+  @IsPublic()
   @Get('doctors')
   async findAllDoctors(@Query() pagination: PaginationDto) {
     return (await this.userService.findAllDoctors(pagination)) || [];

@@ -77,7 +77,14 @@ export class UserService {
       where: {
         id: doctorId,
       },
-      relations: ['services'],
+      relations: [
+        'services',
+        'services.client',
+        'services.agreement',
+        'services.payments',
+        'services.payments',
+        'services.files',
+      ],
     });
     if (!doctor) {
       throw new HttpException('Doctor not found', HttpStatus.NOT_FOUND);
