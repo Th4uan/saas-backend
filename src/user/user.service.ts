@@ -12,6 +12,7 @@ import { HashingService } from 'src/auth/hashing/hashing.service';
 import { UserRoleEnum } from './enums/user-role.enum';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { RequestDisponibilityDto } from './dto/request-disponibility.dto';
+import { EncryptionService } from 'src/common/utils/encryption/encryption.service';
 
 @Injectable()
 export class UserService {
@@ -19,6 +20,7 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly hashingService: HashingService,
+    private readonly decryptionService: EncryptionService,
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
@@ -90,6 +92,9 @@ export class UserService {
       throw new HttpException('Doctor not found', HttpStatus.NOT_FOUND);
     }
     const services = doctor.services;
+    services.forEach((service) => {
+      service.client.cpf = this.decryptionService.decrypt(service.client.cpf);
+    });
     return services || [];
   }
 
