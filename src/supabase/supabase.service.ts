@@ -130,7 +130,9 @@ export class SupabaseService {
       throw new BadRequestException('No doctor provided');
     }
 
-    const signedPdf = signPdf(file.buffer, pfxBuffer.certificate, password);
+    const cleanPdfBuffer = this.fixPdfBuffer(file.buffer);
+
+    const signedPdf = signPdf(cleanPdfBuffer, pfxBuffer.certificate, password);
 
     if (!signedPdf) {
       throw new BadRequestException('Error signing PDF');
@@ -213,5 +215,14 @@ export class SupabaseService {
     status = true;
 
     return status;
+  }
+
+  private fixPdfBuffer(buffer: Buffer): Buffer {
+    const eof = '%%EOF';
+    const eofIndex = buffer.lastIndexOf(eof);
+
+    if (eofIndex === -1) throw new Error('EOF not found in PDF');
+
+    return buffer.subarray(0, eofIndex + eof.length);
   }
 }
