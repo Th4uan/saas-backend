@@ -218,11 +218,14 @@ export class SupabaseService {
   }
 
   private fixPdfBuffer(buffer: Buffer): Buffer {
+    const bufferString = buffer.toString('latin1');
     const eof = '%%EOF';
-    const eofIndex = buffer.lastIndexOf(eof);
-
+    const eofIndex = bufferString.lastIndexOf(eof);
+  
     if (eofIndex === -1) throw new Error('EOF not found in PDF');
-
-    return buffer.subarray(0, eofIndex + eof.length);
+  
+    const fixedString = bufferString.substring(0, eofIndex + eof.length);
+  
+    return Buffer.from(fixedString, 'latin1');
   }
 }
