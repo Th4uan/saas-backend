@@ -60,6 +60,7 @@ export class UserService {
       where: {
         role: UserRoleEnum.Doctor,
       },
+      relations: ['certificates'],
     });
 
     const doctorData = doctors.map((doctor) => {
@@ -68,6 +69,7 @@ export class UserService {
         username: doctor.username,
         email: doctor.email,
         disponibility: doctor.disponibility,
+        certificates: doctor.certificates,
       };
     });
 
