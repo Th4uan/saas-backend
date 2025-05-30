@@ -15,34 +15,34 @@ export class StampService {
     });
     const pdfDoc = await PDFDocument.load(pdfBuffer);
 
-    const carimboBuffer = this.genarateStampBuffer(doctor.fullName, crm);
-
-    const carimboImage = await pdfDoc.embedPng(carimboBuffer);
-
     const paginas = pdfDoc.getPages();
     const ultimaPagina = paginas[paginas.length - 1];
     const { width, height } = ultimaPagina.getSize();
 
-    const larguraImagem = width * 0.35;
-    const alturaImagem =
-      (carimboImage.height / carimboImage.width) * larguraImagem;
+    const larguraCarimbo = width * 0.25;
 
-    const margemX = width * 0.04;
-    const margemY = height * 0.04;
+    const carimboBuffer = this.genarateStampBuffer(doctor.fullName, crm);
+    const carimboImage = await pdfDoc.embedPng(carimboBuffer);
+
+    const alturaCarimbo =
+      (carimboImage.height / carimboImage.width) * larguraCarimbo;
+
+    const margemX = width * 0.03;
+    const margemY = height * 0.03;
 
     ultimaPagina.drawImage(carimboImage, {
-      x: width - larguraImagem - margemX,
+      x: width - larguraCarimbo - margemX,
       y: margemY,
-      width: larguraImagem,
-      height: alturaImagem,
+      width: larguraCarimbo,
+      height: alturaCarimbo,
     });
 
     return Buffer.from(await pdfDoc.save());
   }
 
   private genarateStampBuffer(nomeDoctor: string, crm: string): Buffer {
-    const largura = 600;
-    const altura = 150;
+    const largura = 400;
+    const altura = 100;
     const canvas = createCanvas(largura, altura);
     const ctx = canvas.getContext('2d');
 
@@ -51,7 +51,7 @@ export class StampService {
     ctx.fillRect(0, 0, largura, altura);
     ctx.fillStyle = 'black';
 
-    ctx.font = 'bold 20px LiberationSans';
+    ctx.font = 'bold 16px LiberationSans';
 
     const data = new Date();
     const dataHoraFormatada = data.toLocaleString('pt-BR', {
@@ -65,7 +65,7 @@ export class StampService {
     ];
 
     linhas.forEach((linha, index) => {
-      ctx.fillText(linha, 10, 30 * (index + 1));
+      ctx.fillText(linha, 10, 25 * (index + 1));
     });
 
     return canvas.toBuffer('image/png');
