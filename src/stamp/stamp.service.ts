@@ -23,7 +23,7 @@ export class StampService {
     const ultimaPagina = paginas[paginas.length - 1];
     const { width } = ultimaPagina.getSize();
 
-    const larguraImagem = 250;
+    const larguraImagem = 600;
     const alturaImagem =
       (carimboImage.height / carimboImage.width) * larguraImagem;
 
@@ -38,8 +38,8 @@ export class StampService {
   }
 
   private genarateStampBuffer(nomeDoctor: string, crm: string): Buffer {
-    const largura = 400;
-    const altura = 100;
+    const largura = 600;
+    const altura = 150;
     const canvas = createCanvas(largura, altura);
     const ctx = canvas.getContext('2d');
 
