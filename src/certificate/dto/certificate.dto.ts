@@ -11,4 +11,8 @@ export class CertificateDTO {
 
   @IsNotEmpty()
   expiresAt: string;
+
+  @IsNotEmpty()
+  @IsString()
+  crm: string;
 }

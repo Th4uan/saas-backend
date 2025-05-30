@@ -20,6 +20,9 @@ export class CertificateEntity {
   @Column()
   password: string;
 
+  @Column()
+  crm: string;
+
   @ManyToOne(() => User, (doctor) => doctor.certificates)
   @JoinColumn({ name: 'doctorId' })
   doctorId: User;

@@ -29,6 +29,7 @@ export class CertificateService {
         certificate: certificate.buffer,
         password: certificateDto.password,
         expiredAt: certificateDto.expiresAt,
+        crm: certificateDto.crm,
         doctorId: user,
       };
 

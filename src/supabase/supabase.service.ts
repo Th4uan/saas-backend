@@ -142,6 +142,7 @@ export class SupabaseService {
       signedPdf,
       doctor,
       client,
+      pfxBuffer.crm,
     );
 
     const result = await this.saveDatabaseFile(file, fileDto, true);
@@ -221,11 +222,11 @@ export class SupabaseService {
     const bufferString = buffer.toString('latin1');
     const eof = '%%EOF';
     const eofIndex = bufferString.lastIndexOf(eof);
-  
+
     if (eofIndex === -1) throw new Error('EOF not found in PDF');
-  
+
     const fixedString = bufferString.substring(0, eofIndex + eof.length);
-  
+
     return Buffer.from(fixedString, 'latin1');
   }
 }

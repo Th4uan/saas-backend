@@ -10,6 +10,7 @@ export class StampService {
     pdfBuffer: Buffer,
     doctor: User,
     client: Client,
+    crm: string,
   ): Promise<Buffer> {
     registerFont('src/assets/fonts/LiberationSans-Regular.ttf', {
       family: 'LiberationSans',
@@ -19,6 +20,7 @@ export class StampService {
     const carimboBuffer = this.genarateStampBuffer(
       doctor.fullName,
       client.fullName,
+      crm,
     );
 
     const carimboImage = await pdfDoc.embedPng(carimboBuffer);
@@ -41,7 +43,11 @@ export class StampService {
     return Buffer.from(await pdfDoc.save());
   }
 
-  private genarateStampBuffer(nomeDoctor: string, nomeClient: string): Buffer {
+  private genarateStampBuffer(
+    nomeDoctor: string,
+    nomeClient: string,
+    crm: string,
+  ): Buffer {
     const largura = 600;
     const altura = 150;
     const canvas = createCanvas(largura, altura);
@@ -62,7 +68,7 @@ export class StampService {
     const linhas = [
       `${nomeClient}`,
       'Assinado digitalmente por:',
-      `${nomeDoctor}`,
+      `${nomeDoctor} CRM: ${crm}`,
       `Data: ${dataHoraFormatada}`,
     ];
 
