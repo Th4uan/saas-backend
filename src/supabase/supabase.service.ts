@@ -122,10 +122,6 @@ export class SupabaseService {
 
     const doctor = await this.doctorService.findUserById(fileDto.doctorId);
 
-    const client = await this.clientService.findOneClientEntity(
-      fileDto.clientId,
-    );
-
     if (!doctor || doctor.role != UserRoleEnum.Doctor) {
       throw new BadRequestException('No doctor provided');
     }
@@ -141,7 +137,6 @@ export class SupabaseService {
     const stampedBuffer = await this.stampService.aplicarCarimboBufferNoPDF(
       signedPdf,
       doctor,
-      client,
       pfxBuffer.crm,
     );
 
