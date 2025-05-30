@@ -47,8 +47,7 @@ export class StampService {
     const ctx = canvas.getContext('2d');
 
     ctx.clearRect(0, 0, largura, altura);
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, largura, altura);
+
     ctx.fillStyle = 'black';
 
     ctx.font = 'bold 16px LiberationSans';
