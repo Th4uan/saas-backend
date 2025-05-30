@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { createCanvas, registerFont } from 'canvas';
 import { PDFDocument } from 'pdf-lib';
-import { Client } from 'src/clients/entities/client.entity';
 import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
@@ -39,8 +38,8 @@ export class StampService {
   }
 
   private genarateStampBuffer(nomeDoctor: string, crm: string): Buffer {
-    const largura = 600;
-    const altura = 150;
+    const largura = 900;
+    const altura = 250;
     const canvas = createCanvas(largura, altura);
     const ctx = canvas.getContext('2d');
 
@@ -49,7 +48,7 @@ export class StampService {
     ctx.fillRect(0, 0, largura, altura);
     ctx.fillStyle = 'black';
 
-    ctx.font = 'bold 16px LiberationSans';
+    ctx.font = 'bold 20px LiberationSans';
 
     const data = new Date();
     const dataHoraFormatada = data.toLocaleString('pt-BR', {
