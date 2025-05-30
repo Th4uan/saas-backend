@@ -21,15 +21,18 @@ export class StampService {
 
     const paginas = pdfDoc.getPages();
     const ultimaPagina = paginas[paginas.length - 1];
-    const { width } = ultimaPagina.getSize();
+    const { width, height } = ultimaPagina.getSize();
 
-    const larguraImagem = 600;
+    const larguraImagem = width * 0.35;
     const alturaImagem =
       (carimboImage.height / carimboImage.width) * larguraImagem;
 
+    const margemX = width * 0.04;
+    const margemY = height * 0.04;
+
     ultimaPagina.drawImage(carimboImage, {
-      x: width - larguraImagem - 20,
-      y: 20,
+      x: width - larguraImagem - margemX,
+      y: margemY,
       width: larguraImagem,
       height: alturaImagem,
     });
