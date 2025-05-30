@@ -38,8 +38,8 @@ export class StampService {
   }
 
   private genarateStampBuffer(nomeDoctor: string, crm: string): Buffer {
-    const largura = 900;
-    const altura = 250;
+    const largura = 400;
+    const altura = 100;
     const canvas = createCanvas(largura, altura);
     const ctx = canvas.getContext('2d');
 
