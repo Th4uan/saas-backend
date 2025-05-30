@@ -18,9 +18,7 @@ export class StampService {
 
     const carimboBuffer = this.genarateStampBuffer(
       doctor.fullName,
-      doctor.id,
       client.fullName,
-      client.id,
     );
 
     const carimboImage = await pdfDoc.embedPng(carimboBuffer);
@@ -43,12 +41,7 @@ export class StampService {
     return Buffer.from(await pdfDoc.save());
   }
 
-  private genarateStampBuffer(
-    nomeDoctor: string,
-    idDoctor: string,
-    nomeClient: string,
-    idClient: string,
-  ): Buffer {
+  private genarateStampBuffer(nomeDoctor: string, nomeClient: string): Buffer {
     const largura = 600;
     const altura = 150;
     const canvas = createCanvas(largura, altura);
@@ -67,9 +60,9 @@ export class StampService {
     });
 
     const linhas = [
-      `${nomeClient} (ID: ${idClient})`,
+      `${nomeClient}`,
       'Assinado digitalmente por:',
-      `${nomeDoctor} (ID: ${idDoctor})`,
+      `${nomeDoctor}`,
       `Data: ${dataHoraFormatada}`,
     ];
 
